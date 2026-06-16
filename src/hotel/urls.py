@@ -17,6 +17,7 @@ urlpatterns = [
     path('avisClient/',views.avisClient,name='avisClient'),
     path('detailChambre/<int:id>/',views.voirDetail,name='voirDetail'),
     path('ajoutChambre/',views.ajoutChambre,name='ajoutChambre'),
+    path('recherche/',views.chercherChambre,name='recherche'),
     path('supprimerChambre/<int:id>/',views.supprimerChambre,name='supprimer'),
     path('dashboard/',views.dashboard,name='dashboard'),
     path('gestionChambre/',views.gestionChambre,name='gestionChambre'),

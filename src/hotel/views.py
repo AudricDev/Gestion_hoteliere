@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login as auth_login,logout
 from django.contrib import messages
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
 # Create your views here.
 def index(request):
     chambre = Chambre.objects.all()
@@ -222,7 +222,18 @@ def modifierChambre(request, id):
         chambre.prix = request.POST.get("prix")
         chambre.save()
         return redirect('gestionChambre')
-    
+
+#Rechercher chambre
+def chercherChambre(request):
+    data_input = request.GET.get("search")
+    resultat = Chambre.objects.filter(
+        Q(titre__icontains = data_input) | 
+        Q(status__icontains = data_input)
+        )
+    context = {
+        'chambre' : resultat 
+    }
+    return render(request,'gestionChambre.html',context)  
 #gestionReservation
 def gestionReservation(request):
     if not request.user.is_authenticated:
@@ -243,8 +254,6 @@ def gestionReservation(request):
         })
 
 #Reservation 
-
-
 def reserverChambre(request, id):
     if not request.user.is_authenticated:
         return redirect('login')
