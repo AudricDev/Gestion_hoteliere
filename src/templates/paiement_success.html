@@ -1,0 +1,23 @@
+{% include "components/nav.html" %}
+
+<div class="success_container">
+
+    <div class="success_box">
+
+        <h1>Paiement réussi</h1>
+
+        <p>Votre réservation est en cours de traitement.</p>
+
+        <div class="info">
+            <p>Chambre : pour {{ reservation.chambre.nbr_personne }} personne</p>
+            <p>Statut : {{ reservation.status }}</p>
+            <p>Montant : {{ reservation.prix_total }} Ar</p>
+        </div>
+
+        <a href="{% url 'nosChambre' %}">
+            <button>Retour aux chambres</button>
+        </a>
+
+    </div>
+
+</div>

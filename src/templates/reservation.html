@@ -1,0 +1,71 @@
+{% include "components/nav.html" %}
+<div class="reservation_page">
+
+    <div class="reservation_grid">
+        <!-- LEFT -->
+        <div class="left_box">
+            <div class="main_img">
+                {% with photo=chambre.photos.first %}
+                    {% if photo %}
+                        <img src="{{ photo.image.url }}">
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="mini_images">
+                {% for p in chambre.photos.all %}
+                    <img src="{{ p.image.url }}">
+                {% endfor %}
+            </div>
+
+            <h2>{{ chambre.titre }}</h2>
+
+            <p><strong>Prix :</strong> {{ chambre.prix }} Ar / nuit</p>
+
+            {% if chambre.status == "Disponible" %}
+                <div class="badge dispo">Disponible</div>
+            {% else %}
+                <div class="badge nodispo">Non disponible</div>
+            {% endif %}
+
+            <div class="equipements">
+                <h3>Équipements</h3>
+                {% for e in chambre.equipements.all %}
+                    <span>{{ e.title }}</span>
+                {% endfor %}
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="form_box">
+
+            <form method="POST">
+                {% csrf_token %}
+                <label for="">Non utilisateur</label>
+                <input type="text" name="nom" placeholder="{{user.first_name}}" value="{{user.first_name}}" disabled>
+                <label for="">Email</label>
+                <input type="email" name="email" placeholder="{{user.email}}" value="{{user.email}}" disabled>
+                <label for="">Date arrivée</label>
+                <input type="datetime-local" name="date_arrivee" required>
+                <label for="">Date départ</label>
+                <input type="datetime-local" name="date_depart" required>
+                <label for="">Nombre du personne</label>
+                <input type="number" name="nbr_pers" 
+                {% if chambre.nbr_personne <= 1 %} 
+                placeholder="Chambre pour {{chambre.nbr_personne}} personne"
+                {% else %}
+                placeholder="Chambre pour {{chambre.nbr_personne}} personnes"
+                {% endif %} value="{{chambre.nbr_personne}}" required>
+                
+                <button class="btn_confirm">Confirmer la réservation</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+{% include "components/footer.html" %}
+</body>
+</html>

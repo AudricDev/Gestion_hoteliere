@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion hotelière</title>
+    {% load static %}
+    <link rel="stylesheet" href=" {% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+</head>
+<body>
+<nav class="navbar"> 
+    <div class="logo">
+        <span class="logo_color">HOTEL</span> NAY
+    </div>
+    <div class="nav_item">
+        <ul>
+            <li>
+                <a href="{% url 'index' %}" class="nav_link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">Accueil</a>
+            </li>
+            <li>
+                <a href="{% url 'apropos' %}" class="nav_link {% if request.resolver_match.url_name == 'apropos' %}active{% endif %}">A propos</a>
+            </li>
+            <li>
+                <a href="{% url 'nosChambre' %}" class="nav_link {% if request.resolver_match.url_name == 'nosChambre' %}active{% endif %}">Chambres</a>
+            </li>
+            <li>
+                <a href="{% url 'avisClient' %}" class="nav_link {% if request.resolver_match.url_name == 'avisClient' %}active{% endif %}">Avis</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+                <a href="{% url 'mesReservations' %}" class="nav_link {% if request.resolver_match.url_name == 'mesReservations' %}active{% endif %}">Réservations</a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="#footer" class="nav_link">Contact</a>
+            </li>
+        </ul>
+    </div>
+    <div class="con">
+        <ul>
+            {% if user.is_authenticated %}
+            <li class="utilisateur">
+                <i class="fas fa-user"></i> {{ user.username }}
+            </li>
+            <li>
+                <a class="btn_logout"
+                   href="{% url 'deconnexion' %}"
+                   onclick="return confirm('Voulez-vous vraiment vous déconnecter ?')">
+                   Déconnexion
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a class="btn_login" href="{% url 'login' %}">
+                    Connexion
+                </a>
+            </li>
+            <li>
+                <a class="btn_register" href="{% url 'inscription' %}">
+                    S'inscrire
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

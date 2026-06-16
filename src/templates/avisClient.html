@@ -1,0 +1,43 @@
+{% include "components/nav.html" %}
+<section id="avis">
+    <div class="avis-header">
+        <h1>Ce que disent nos clients</h1>
+        <p>Des expériences authentiques partagées par nos voyageurs</p>
+    </div>
+    <div class="avis-container">
+        {% for a in avis %}
+        <div class="avis-card">
+            <div class="avis-top">
+                <img src="{{ a.user.profile.image.url }}" alt="">
+                <div>
+                    <h3>{{ a.user.first_name }} {{ a.user.last_name }}</h3>
+                    <div class="stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= a.note %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <p>{{ a.message }}</p>
+        </div>
+        {% empty %}
+            <p>Aucun avis pour le moment.</p>
+        {% endfor %}
+    </div>
+    <div style="text-align:center; margin-bottom:20px;">
+    {% if user.is_authenticated %}
+        <a href="{% url 'ajouter_avis' %}">
+            <button class="btn_ajouter">Laisser un avis</button>
+        </a>
+    {% else %}
+        <a href="{% url 'login' %}">
+            <button class="btn_ajouter">Connectez-vous pour laisser un avis</button>
+        </a>
+    {% endif %}
+    </div>
+</section>
+{% include "components/footer.html" %}

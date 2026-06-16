@@ -1,0 +1,81 @@
+{% include "components/nav.html" %}
+
+<div class="payment_container">
+
+    <!-- RESUME RESERVATION -->
+    <div class="payment_box summary">
+
+        <h2>Résumé de la réservation</h2>
+
+        <div class="info_line">
+            <span>Chambre :</span>
+            <strong>{{ reservation.chambre.nbr_personne }}</strong>
+        </div>
+
+        <div class="info_line">
+            <span>Type :</span>
+            <strong>{{ reservation.chambre.type_chambre }}</strong>
+        </div>
+
+        <div class="info_line">
+            <span>Arrivée :</span>
+            <strong>{{ reservation.date_arrivee }}</strong>
+        </div>
+
+        <div class="info_line">
+            <span>Départ :</span>
+            <strong>{{ reservation.date_depart }}</strong>
+        </div>
+
+        <div class="info_line total">
+            <span>Total à payer :</span>
+            <strong>{{ reservation.prix_total }} Ar</strong>
+        </div>
+
+    </div>
+
+    <!-- FORM PAIMENT -->
+    <div class="payment_box form">
+
+        <h2>Paiement</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- CIN -->
+            <div class="form_group">
+                <label>CIN</label>
+                <input type="text" name="cin" required>
+            </div>
+
+            <!-- MODE -->
+            <div class="form_group">
+                <label>Mode de paiement</label>
+                <select name="mode_payement">
+                    <option value="Espece">Espèce</option>
+                    <option value="Mobile">Mobile Money</option>
+                </select>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="form_group">
+                <label>Description</label>
+                <textarea name="description"></textarea>
+            </div>
+
+            <!-- UPLOAD -->
+            <div class="form_group">
+                <label>Capture de paiement</label>
+                <input type="file" name="capture">
+            </div>
+
+            <!-- BUTTON -->
+            <button type="submit" class="btn_pay">
+                Valider le paiement
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

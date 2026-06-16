@@ -1,0 +1,59 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+    <div class="content">
+        <div class="title_page">
+            <h1>Gestion équipement</h1>
+            {% include "components/profil.html" %}
+        </div>
+        {% include "components/card.html" %}
+        <div class="data">
+            <!-- Gestion chambre -->
+            <div class="chambre_data">
+                <div class="champ_btn">
+                    <div class="btn_ajout">
+                        <!-- Bouton ouvrir Modal formulaire-->
+                        <a href="#modal-ajouter-equipement">
+                            <button class="btn_ajouter">Ajouter</button>
+                        </a>
+                    </div>
+                    <div class="search">
+                        <form action="" method="get">
+                            <input class="bar_search" type="search" name="search" id="search" placeholder="Rechercher">
+                            <input class="btn_search" type="submit" value="Rechercher">
+                        </form>
+                    </div>
+                </div>
+                <table>
+                    <tr class="entete_table">
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for equipement in equipements %}
+                    <tr class="datatable">
+                        <td>
+                            {% if equipement.image %}
+                                <img class="image" 
+                                src="{{ equipement.image.url }}" 
+                                alt=""
+                                style="width:50px;height:50px;">
+                            {% else %}
+                                Pas d'image
+                            -{% endif %}
+                        </td>
+                        <td>{{ equipement.title }}</td>
+                        <td>{{ equipement.description }}</td>
+                        <td>
+                            <a href="#modal-{{equipement.id}}">
+                                <button><i class="fas fa-pen"></i></button>
+                            </a>
+                            <a href="{% url 'supprimerEquipement' equipement.id %}" onclick="return confirm('Voulez vous vraiment supprimer ?')">
+                                <button><i class="fas fa-trash"></i></button>
+                            </a>        
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- ========/gestion chambre========= -->
+{% endblock  %}

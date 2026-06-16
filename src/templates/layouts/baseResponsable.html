@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrateur</title>
+    {% load static %}
+    <link rel="stylesheet" href=" {% static 'css/styleAdmin.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+</head>
+<body>
+<div class="admin_content">
+    <div class="sidebar">
+        <div class="logoAdmin">
+            <span class="logo_color">HOTEL</span > NAY
+        </div>        
+        <div class="menu_sidebar">
+            <ul>
+                <li class="side_link">
+                    <a href="{% url 'gestionMenage' %}"><i class="fas fa-check-double"></i> Gestion du menage</a>
+                </li>
+                 <li class="side_link_deconnexion">
+                    <a href="{% url 'deconnexion' %}"><i class="fas fa-right-from-bracket"></i> Deconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% block content %}{% endblock  %}
+    {% include "components/modal.html" %}

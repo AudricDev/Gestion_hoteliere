@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="main">
+        <div class="contentform">
+            <a href="{% url 'index' %}" class="logo_link">
+                <div class="logoform">
+                    <span class="logo_color">HOTEL</span > NAY
+                </div>
+            </a>
+            <div class="formulaire">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label>Nom</label>
+                    <div class="mt">
+                        <input type="text" name="first_name" placeholder="Entrer votre nom">
+                    </div>
+                    <label>Prénom</label>
+                    <div class="mt">
+                        <input type="text" name="last_name" placeholder="Entrer votre prénom">
+                    </div>
+                    <label>Nom d'utilisateur</label>
+                    <div class="mt">
+                        <input type="text" name="username" placeholder="Entrer votre prénom">
+                    </div>
+                    <label>Email</label>
+                    <div class="mt">
+                        <input type="email" name="email" placeholder="Exemple@gmail.com">
+                    </div>
+                    <label>Mot de passe</label>
+                    <div class="mt">
+                        <input type="password" name="password1" placeholder="********">
+                    </div>
+                    <label>Confirmer votre mot de passe</label>
+                    <div class="mt">
+                        <input type="password" name="password2" placeholder="********">
+                    </div>
+                    <div class="mt">
+                        <input type="submit" value="Enregistrer" class="enregistrer">
+                    </div>
+                    <div class="mt">
+                        <a href="{% url 'login' %}" class="retour">
+                            J'ai déjà un compte
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

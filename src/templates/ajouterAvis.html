@@ -1,0 +1,26 @@
+{% include "components/nav.html" %}
+
+<section class="form-avis">
+    <h1>Laisser un avis</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Votre message</label>
+            <textarea name="message" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Note</label>
+            <select name="note" required>
+                <option value="5">★★★★★ (5)</option>
+                <option value="4">★★★★☆ (4)</option>
+                <option value="3">★★★☆☆ (3)</option>
+                <option value="2">★★☆☆☆ (2)</option>
+                <option value="1">★☆☆☆☆ (1)</option>
+            </select>
+        </div>
+        <button type="submit">Envoyer</button>
+    </form>
+
+</section>
+
+{% include "components/footer.html" %}

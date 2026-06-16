@@ -1,0 +1,37 @@
+{% include "components/nav.html" %}
+<div class="reservations_container">
+    <h1>Mes Réservations</h1>
+    {% if reservations %}
+        <div class="reservation_grids">
+            {% for r in reservations %}
+            <div class="reservation_cards">
+                <div class="card_header">
+                    <h2>Chambre {{ r.chambre.numero }}</h2>
+                    <span class="status
+                        {% if r.status == 'Validé' %}valide
+                        {% elif r.status == 'Refusé' %}refuse
+                        {% else %}attente{% endif %}">
+                        {{ r.status }}
+                    </span>
+                </div>
+                <div class="card_body">
+                    <p><strong>Type :</strong> {{ r.chambre.type_chambre }}</p>
+                    <p><strong>Arrivée :</strong> {{ r.date_arrivee }}</p>
+                    <p><strong>Départ :</strong> {{ r.date_depart }}</p>
+                    <p><strong>Personnes :</strong> {{ r.nbr_pers }}</p>
+                    <p><strong>Total :</strong> {{ r.prix_total }} Ar</p>
+                </div>
+                <div class="card_footer">
+                    {% if r.status == "En attente de validation" %}
+                        <a href="{% url 'paiement' r.id %}">
+                            <button>Payer</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucune réservation trouvée.</p>
+    {% endif %}
+</div>

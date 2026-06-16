@@ -1,0 +1,61 @@
+{% include "components/nav.html" %}
+
+<div class="detail_container">
+
+    <!-- GALERIE -->
+    <div class="photoDetail">
+
+        <div class="main_photo">
+            {% with photo=details.photos.first %}
+                {% if photo %}
+                    <img src="{{ photo.image.url }}" alt="">
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="gallery">
+            {% for photo in details.photos.all %}
+                <img src="{{ photo.image.url }}" alt="">
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- INFOS -->
+    <div class="descriptionDetail">
+
+        <div class="top_info">
+            <h1 class="titreDetail">
+                {{ details.type_chambre.title }}
+            </h1>
+
+            {% if details.status == "Disponible" %}
+                <span class="badgeStatus dispo">{{ details.status }}</span>
+            {% else %}
+                <span class="badgeStatus indispo">{{ details.status }}</span>
+            {% endif %}
+        </div>
+        <p class="desc">
+            {{ details.type_chambre.description }}
+        </p>
+        <div class="info_box">
+            <div><strong>💰 Prix :</strong> {{ details.prix }} Ar / nuit</div>
+            <div><strong>👤 Capacité :</strong> {{ details.nbr_personne }} personnes</div>
+        </div>
+        <div class="btn_items">
+            {% if user.is_authenticated %}
+                <a href="{% url 'reservation' details.id %}">
+                    <button class="btn_reserver">Réserver maintenant</button>
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}">
+                    <button class="btn_reserver">Se connecter pour réserver</button>
+                </a>
+            {% endif %}
+            <a href="{% url 'nosChambre' %}">
+                <button class="btn_retour">Retour</button>
+            </a>
+        </div>
+    </div>
+</div>
+{% include "components/footer.html" %}

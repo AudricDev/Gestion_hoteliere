@@ -1,0 +1,72 @@
+{% include "components/nav.html" %}
+{% load static %}
+<section id="chambres">
+    <div class="titreSection">
+        <h1>Nos chambres en vedette</h1>
+    </div>
+    <div class="contenuChambre">
+
+        {% for chambre in chambres %}
+        <div class="cardChambre">
+
+                    <div class="cardImage">
+
+                        {% with photo=chambre.photos.first %}
+                            {% if photo %}
+                                <img src="{{ photo.image.url }}" alt="chambre">
+                            {% else %}
+                                <img src="{% static 'assets/images/hotel_5_etoiles' %}" alt="chambre">
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- overlay -->
+                        <div class="overlay"></div>
+
+                        <!-- badge type -->
+                        <div class="badge_type">
+                            {{ chambre.type_chambre }}
+                        </div>
+
+                        <!-- badge statut -->
+                        <div class="badge_status {% if chambre.status == 'Disponible' %}dispo{% else %}indispo{% endif %}">
+                            {{ chambre.status }}
+                        </div>
+
+                        <!-- info -->
+                        <div class="infoChambre">
+
+                            <div class="description">
+                                {{ chambre.titre }}
+                            </div>
+
+                            <div class="prix">
+                                {{ chambre.prix }} Ar / nuit
+                            </div>
+
+                            <div class="extra_info">
+                                <span>Pour {{ chambre.nbr_personne }} pers</span>
+                            </div>
+
+                        </div>
+
+                        <!-- boutons -->
+                        <div class="btn">
+                            <a href="{% url 'voirDetail' chambre.id %}">
+                                <button class="btn_detail">Détails</button>
+                            </a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'reservation' chambre.id %}">
+                                 <button class="btn_reserver">Réserver</button>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}">
+                                    <button class="btn_reserver">Réserver</button>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+</section>
+{% include "components/footer.html" %}

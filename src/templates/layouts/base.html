@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrateur</title>
+    {% load static %}
+    <link rel="stylesheet" href=" {% static 'css/styleAdmin.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+</head>
+<body>
+<div class="admin_content">
+    <div class="sidebar">
+        <div class="logoAdmin">
+            <span class="logo_color">HOTEL</span > NAY
+        </div>
+        <div class="menu_sidebar">
+            <ul>
+                <li class="side_link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'dashboard' %}">
+                        <i class="fab fa-microsoft"></i> Tableau de bord
+                    </a>
+                </li>
+
+                <li class="side_link {% if request.resolver_match.url_name == 'gestionUtilisateur' %}active{% endif %}">
+                    <a href="{% url 'gestionUtilisateur' %}">
+                        <i class="fas fa-user-gear"></i> Utilisateurs
+                    </a>
+                </li>
+
+                <li class="side_link {% if request.resolver_match.url_name == 'gestionChambre' %}active{% endif %}">
+                    <a href="{% url 'gestionChambre' %}">
+                        <i class="fas fa-house-chimney-user"></i> Chambres
+                    </a>
+                </li>
+                <li class="side_link {% if request.resolver_match.url_name == 'gestionReservation' %}active{% endif %}">
+                    <a href="{% url 'gestionReservation' %}"><i class="fas fa-pen-to-square"></i> Reservations</a>
+                </li>
+                <li class="side_link {% if request.resolver_match.url_name == 'gestionEquipement' %}active{% endif %}">
+                    <a href="{% url 'gestionEquipement' %}"><i class="fas fa-toolbox"></i> Equipement</a>
+                </li>
+                <li class="side_link_deconnexion">
+                    <a href="{% url 'deconnexion' %}"><i class="fas fa-right-from-bracket"></i> Deconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% block content %}{% endblock  %}
+    {% include "components/modal.html" %}

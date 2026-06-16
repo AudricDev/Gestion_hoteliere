@@ -1,0 +1,336 @@
+<!-- modal formulaire d'ajout chambre-->
+    <!-- Modal chambre-->
+    <div class="modal" id="modal-ajouter">
+        <div class="modal-content">
+            <!-- Fermer -->
+            <a href="{% url 'gestionChambre' %}" class="close">
+                &times;
+            </a>
+            <form action="{% url 'ajoutChambre' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="header">
+                    <div class="logoAdmin">
+                        <span class="logo_color">HOTEL</span > NAY
+                    </div>
+                </div>
+                <label for="title">Hotel</label>
+                <div class="form-input">
+                    <select name="hotel" id="" class="selection">
+                        {% for hotel in hotels %}
+                        <option value="{{ hotel.id }}">{{ hotel.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label for="title">Titre</label>
+                <div class="form-input">
+                    <input type="text" name="titre" id="" placeholder="Titre ">
+                </div>
+                <label for="type">Type du chambre</label>
+                <div class="form-input">
+                    <select name="type_chambre" id="" class="selection">
+                        {% for type in types %}
+                        <option value="{{ type.id }}">{{ type.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label for="type">Status</label>
+                <div class="form-input">
+                    <select name="status" id="" class="selection">
+                        <option value="Disponible">Disponible</option>
+                        <option value="Non disponible">Non disponible</option>
+                    </select>
+                </div>
+                <label for="nbr_pers">Nombre personne</label>
+                <div class="form-input">
+                    <input type="number" name="nbr_pers" id="" placeholder="Nombre personne">
+                </div>
+                <label for="prix">Prix</label>
+                <div class="form-input">
+                    <input type="number" name="prix" id="" placeholder="Prix">
+                </div>
+                <div class="btn_boite">
+                    <input type="submit" value="Enregistrer" class="enregistrer">
+                </div>
+            </form>
+        </div>
+
+    </div>
+<!-- /modal formulaire ajout chambre-->
+<!-- modal formulaire modification chambre-->
+    <!-- Modal -->
+{% for cha in chambre %}
+
+<!-- MODAL MODIFICATION -->
+<div class="modal-modification" id="modal-{{cha.id}}">
+    <div class="modal-content">
+
+        <a href="{% url 'gestionChambre' %}" class="close">
+            &times;
+        </a>
+
+        <form action="{% url 'modifierChambre' cha.id %}"
+              method="POST"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="header">
+                <div class="logo">
+                    <span class="logo_color">HOTEL</span> NAY
+                </div>
+            </div>
+            <!-- hotel -->
+            <label>Hotel</label>
+            <div class="form-input">
+                <select name="hotel" class="selection">
+                    {% for hotel in hotels %}
+                        <option value="{{hotel.id}}"                        
+                        >
+                        {{hotel.name}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label>Titre</label>
+            <div class="form-input">
+                <input type="text"
+                       name="titre"
+                       value="{{cha.titre}}">
+            </div>
+<!-- type chambre -->
+            <label>Type chambre</label>
+
+            <div class="form-input">
+                <select name="type_chambre" class="selection">
+                    {% for type in types %}
+                        <option value="{{type.id}}"
+                        {% if type.id == cha.type_chambre.id %}
+                            selected
+                        {% endif %}
+                        >
+                        {{type.title}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- status -->
+            <label>Status</label>
+            <div class="form-input">
+                <select name="status" class="selection">
+                    <option value="Disponible"
+                    {% if cha.status == 'Disponible' %}
+                        selected
+                    {% endif %}
+                    >
+                    Disponible
+                    </option>
+                    <option value="Non disponible"
+                    {% if cha.status == 'Non disponible' %}
+                        selected
+                    {% endif %}
+                    >
+                    Non disponible
+                    </option>
+                </select>
+            </div>
+            <!-- nombre personne -->
+            <label>Nombre personne</label>
+            <div class="form-input">
+                <input type="number"
+                       name="nbr_pers"
+                       value="{{cha.nbr_personne}}">
+            </div>
+            <!-- prix -->
+            <label>Prix</label>
+            <div class="form-input">
+                <input type="number"
+                       name="prix"
+                       value="{{cha.prix}}">
+            </div>
+            <!-- bouton ajout photo -->
+            <div class="form-input">
+                <a href="#modal-ajouter-photo-{{ cha.id }}">
+                    Ajouter photo
+                </a>
+            </div>
+
+            <div class="btn_boite">
+                <input type="submit"
+                       value="Confirmer la modification"
+                       class="enregistrer">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- MODAL AJOUT PHOTO -->
+<div class="modal" id="modal-ajouter-photo-{{ cha.id }}">
+    <div class="modal-content">
+        <a href="{% url 'gestionChambre' %}" class="close">
+            &times;
+        </a>
+        <form action="{% url 'ajoutPhotoChambre' cha.id %}"
+              method="POST"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="header">
+                <div class="logo">
+                    <span class="logo_color">HOTEL</span> NAY
+                </div>
+            </div>
+            <label>Nom photo</label>
+            <div class="form-input">
+                <input type="text"
+                       name="name"
+                       placeholder="Nom photo" value="{{ cha.titre }}">
+            </div>
+            <label>Ajouter photo</label>
+            <div class="form-input">
+                <input type="file"
+                       name="image">
+            </div>
+
+            <div class="btn_boite">
+                <input type="submit"
+                       value="Enregistrer"
+                       class="enregistrer">
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+{% endfor %}
+<!-- /modal formulaire ajout chambre-->
+<!-- modal formulaire d'ajout equipement-->
+    <!-- Modal chambre-->
+    <div class="modal" id="modal-ajouter-equipement">
+
+        <div class="modal-content">
+            <!-- Fermer -->
+            <a href="{% url 'gestionEquipement' %}" class="close">
+                &times;
+            </a>
+            <form action="{% url 'ajoutEquipement' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="header">
+                    <div class="logo">
+                        <span class="logo_color">HOTEL</span > NAY
+                    </div>
+                </div>
+                <label for="title">Titre</label>
+                <div class="form-input">
+                    <input type="text" name="titre" id="" placeholder="Titre ">
+                </div>
+                <label for="title">Description</label>
+                <div class="form-input">
+                    <textarea name="description" id="" placeholder="Description"></textarea>
+                </div>
+                <label for="file" class="file">
+                    Ajouter photo
+                </label>
+                <div class="form-input">
+                    <input type="file" name="image">
+                </div>
+                <div class="btn_boite">
+                    <input type="submit" value="Enregistrer" class="enregistrer">
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /modal formulaire ajout chambre-->
+    <!-- modal formulaire modification chambre pour gestion menage-->
+        <!-- Modal -->
+    {% for cha in chambre %}
+    <!-- MODAL MODIFICATION gestion menage-->
+    <div class="modal-modification" id="modal-menage-{{cha.id}}">
+        <div class="modal-content">
+    
+            <a href="{% url 'gestionMenage' %}" class="close">
+                &times;
+            </a>
+    
+            <form action="{% url 'modifierChambre' cha.id %}"
+                  method="POST"
+                  enctype="multipart/form-data">
+    
+                {% csrf_token %}
+    
+                <div class="header">
+                    <div class="logo">
+                        <span class="logo_color">HOTEL </span> NAY
+                    </div>
+                </div>
+                <!-- hotel -->
+                <label>Hotel</label>
+                <!-- status -->
+                <label>Status</label>
+                <div class="form-input">
+                    <select name="status" class="selection">
+                        <option value="Disponible"
+                        {% if cha.status == 'Disponible' %}
+                            selected
+                        {% endif %}
+                        >
+                        Disponible
+                        </option>
+                        <option value="Non disponible"
+                        {% if cha.status == 'Non disponible' %}
+                            selected
+                        {% endif %}
+                        >
+                        Non disponible
+                        </option>
+                    </select>
+                </div>
+                <div class="btn_boite">
+                    <input type="submit"
+                           value="Confirmer la modification"
+                           class="enregistrer">
+                </div>
+    
+            </form>
+        </div>
+    </div>
+{% endfor %}
+<!-- <script>
+    document.getElementById("id_images").addEventListener("change",function(event){
+        const [file] = event.target.files;
+        const preview = document.getElementById("preview-image");
+
+        if(file){
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        }
+    });
+    function voir(){
+        var sary = document.getElementById("file")
+        document.write(sary)
+    }
+</script> -->
+<script>
+    const fileInput = document.getElementById("file");
+    const preview = document.getElementById("preview");
+    const ajoutImg = document.getElementById("ajoutImg");
+
+    fileInput.addEventListener("change", function(){
+
+        const fichier = this.files[0];
+
+        if(fichier){
+
+            const reader = new FileReader();
+
+            reader.addEventListener("load", function(){
+                preview.src = this.result;
+                preview.style.display = "block";
+                ajoutImg.style.display = "none";
+            });
+
+            reader.readAsDataURL(fichier);
+        }
+
+    });
+</script>
+</body>
+</html>

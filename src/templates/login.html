@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="main">
+        <div class="contentform">
+            <a href="{% url 'index' %}" class="logo_link">
+                <div class="logoform">
+                    <span class="logo_color">HOTEL</span > NAY
+                </div>
+            </a>
+            <div class="formulaire">
+                <form action="{% url 'connexion' %}" method="post">
+                    {% csrf_token %}
+                    <label for="email">Nom d'utilisateur</label>
+                    <div class="mt">
+                        <input type="text" placeholder="Nom d'utilisateur" name="username">
+                    </div>
+                    <label for="Mot de passe">Mot de passe</label>
+                    <div class="mt">
+                        <input type="password" placeholder="********" name="password">
+                    </div>
+                    <div class="mt">
+                        <input type="submit" value="Se connecter" class="enregistrer" name="submit">
+                        <a href="{% url 'inscription'%}" class="retour">J'ai pas un compre</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

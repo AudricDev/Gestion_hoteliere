@@ -1,0 +1,129 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+    <div class="content">
+        <div class="title_page">
+            <h1>Gestion réservation</h1>
+            {% include "components/profil.html" %}
+        </div>
+        {% include "components/card.html" %}
+        <div class="data">
+            <!-- Gestion chambre -->
+            <div class="chambre_data">
+                <div class="champ_btn">
+                    <div class="btn_ajout">
+                        <!-- Bouton ouvrir Modal formulaire-->
+                        <a href="#modal-ajouter">
+                            <button class="btn_ajouter">Ajouter</button>
+                        </a>
+                    </div>
+                    <div class="search">
+                        <form action="" method="get">
+                            <input class="bar_search" type="search" name="search" id="search" placeholder="Rechercher">
+                            <input class="btn_search" type="submit" value="Rechercher">
+                        </form>
+                    </div>
+                </div>
+                <table>
+                    <tr class="entete_table">
+                        <th>Client</th>
+                        <th>Date reservation</th>
+                        <th>Type chambre</th>
+                        <th>Prix total</th>
+                        <th>Paiment</th>
+                        <th>Preuve de paiment</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for reservation in reservations %}
+                    <tr class="datatable">
+                        <td>{{reservation.user_id.username}}</td>
+                        <td>{{reservation.date_arrivee}} <br>à<br> {{reservation.date_depart}}</td>
+                        <td>{{reservation.chambre.type_chambre.title}}</td>
+                        <td>{{reservation.prix_total}} Ar</td>
+                        <td>
+                            {% if reservation.payement.status == "Non payé" %}
+                            <span class="badge" style="background-color: rgb(238, 185, 10);">
+                                {{ reservation.payement.status }}
+                            </span>
+                            {% else %}
+                            <span class="badge" style="background-color: rgba(40, 173, 40, 0.603);color:green;">
+                                {{reservation.payement.status}}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if reservation.payement.capture %}
+                                <a href="#preuve-{{ reservation.id }}">
+                                    <img
+                                        src="{{ reservation.payement.capture.url }}"
+                                        class="preuve-miniature"
+                                        alt="">
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if reservation.status == "En attente de validation" %}
+                            <span class="badge" style="background-color: rgb(238, 185, 10);">
+                                {{ reservation.status }}
+                            </span>
+                            {% elif reservation.status == "Validé" %}
+                            <span class="badge" style="background-color: rgba(40, 173, 40, 0.603);color:green;">
+                                {{reservation.status}}
+                            </span>
+                            {% elif reservation.status == "Refusé" %}
+                            <span class="badge" style="background-color: rgba(255, 0, 0, 0.521);color:red;">
+                                {{reservation.status}}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if reservation.status == "En attente de validation" %}
+                            {% if reservation.payement.status == "Non payé" %}
+                                <a href="{% url 'valider_reservation' reservation.id %}"
+                                onclick="return confirm('Valider cette réservation ?')">
+                                    <button class="valider">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </a>
+                            {% else %}
+                                <button class="valider">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            {% endif %}
+
+                            <a href="{% url 'refuser_reservation' reservation.id %}"
+                            onclick="return confirm('Refuser cette réservation ?')">
+                                <button class="refuser">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                            </a>
+
+                        {% else %}
+                            <i class="fas fa-check"></i>
+                        {% endif %}   
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                
+            </div>
+            <!-- ========/gestion chambre========= -->
+            <!-- Modal verification preuve de paiement -->
+             {% for reservation in reservations %}
+                {% if reservation.payement.capture %}
+                <div id="preuve-{{ reservation.id }}" class="modal">
+                    <div class="modal-content preuve-content">
+            
+                        <a href="#" class="close">&times;</a>
+            
+                        <h2>Preuve de paiement</h2>
+            
+                        <img
+                            src="{{ reservation.payement.capture.url }}"
+                            class="preuve-grande"
+                            alt="">
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+{% endblock  %}

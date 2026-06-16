@@ -1,0 +1,71 @@
+{% extends "layouts/baseResponsable.html" %}
+{% block content %}
+    <div class="content">
+        <div class="title_page">
+            <h1>Gestion Menage</h1>
+            <div class="profil">
+                <div class="email">{{user.email}}</div>
+                <div class="photo"><img src="assets/images/hotel_5_etoiles" alt="" srcset="" style="width: 50px;height:50px; border-radius:50%;"></div>
+            </div>
+        </div>
+        {% include "components/card.html" %}
+        <div class="data">
+            <!-- Gestion chambre -->
+            <div class="chambre_data">
+                <div class="champ_btn">
+                    <div class="btn_ajout">
+                        <!-- Bouton ouvrir Modal formulaire-->
+                        <a href="#modal-ajouter">
+                            <button class="btn_ajouter">Ajouter</button>
+                        </a>
+                    </div>
+                    <div class="search">
+                        <form action="" method="get">
+                            <input class="bar_search" type="search" name="search" id="search" placeholder="Rechercher">
+                            <input class="btn_search" type="submit" value="Rechercher">
+                        </form>
+                    </div>
+                </div>
+                <table>
+                    <tr class="entete_table">
+                        <th>Image</th>
+                        <th>Titre</th>
+                        <th>Nombre de personne</th>
+                        <th>Description</th>
+                        <th>Prix</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for cha in chambre %}
+                    <tr class="datatable">
+                        <td style="display:flex; gap:5px;">
+                            {% for photo in cha.photos.all %}
+                            <img class="image" 
+                            src="{{photo.image.url}}" 
+                            alt="" 
+                            style="width: 50px;height:50px;">
+                            {% endfor %}
+                        </td>
+                        <td>{{cha.titre}}</td>
+                        <td>{{cha.nbr_personne}}</td>
+                        <td>{{cha.type_chambre.description}}</td>
+                        <td>{{cha.prix}} Ar</td>
+                        {% if cha.status == 'Disponible' %}
+                            <td><span class="badge" style="background-color: rgba(40, 173, 40, 0.603);color:green;">{{cha.status}}</span></td>
+                        {% else %}
+                            <td><span class="badge" style="background-color: rgba(255, 0, 0, 0.521);color:red;">{{cha.status}}</span></td>
+                        {% endif %}
+                        <td> 
+                            <a href="{% url 'libererChambre' cha.id%}" onclick="return confirm('Est-ce que la chambre est bien propre ?')">
+                                <button>Disposer</button>
+                            </a>
+                            <a href="{% url 'occuperChambre' cha.id %}" onclick="return confirm('Est-ce que la chambre est en cours de nettoyage ?')">
+                                <button>Préparer</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table> 
+            </div>
+            <!-- ========/gestion chambre========= -->
+{% endblock  %}
