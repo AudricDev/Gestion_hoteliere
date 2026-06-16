@@ -660,10 +660,36 @@ header{
     object-fit: cover;
     border: 2px solid var(--color1--);
 }
-
+.surImage{
+    width: 50px;
+    height: 50px;
+    padding: 2px;
+    color: var(--modifier--);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: cover;
+    border: 2px solid var(--color1--);
+}
 .stars{
     color: gold;
     font-size: 14px;
+}
+.btn_ajouter_avis{
+    font-size: 25px;
+    padding: 1rem 2rem;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: var(--modifier--);
+    color: var(--color1--);
+}
+.btn_ajouter_avis:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 5px 30px var(--black--);
+    border: none;
+    background: var(--modifier--);
+    color: var(--color4--);
 }
 /* DETAIL */
 .detail_container{
