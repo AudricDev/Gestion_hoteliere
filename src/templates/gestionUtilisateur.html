@@ -12,12 +12,12 @@
                 <div class="champ_btn">
                     <div class="btn_ajout">
                         <!-- Bouton ouvrir Modal formulaire-->
-                        <a href="#modal-ajouter">
+                        <a href="#modal-ajouter-utilisateur">
                             <button class="btn_ajouter">Ajouter</button>
                         </a>
                     </div>
                     <div class="search">
-                        <form action="" method="get">
+                        <form action="{% url "chercherUtilisateur" %}" method="get">
                             <input class="bar_search" type="search" name="search" id="search" placeholder="Rechercher">
                             <input class="btn_search" type="submit" value="Rechercher">
                         </form>
@@ -30,27 +30,31 @@
                         <th>Nom</th>
                         <th>Prenoms</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Action</th>
                     </tr>
                     {% for users in users %}
                     <tr class="datatable">
                         <td style="display:flex; gap:5px;">
-                            {% for photo in users.photos.all %}
+                            {% if users.user_profil.photo %}
                             <img class="image" 
-                            src="{{photo.image.url}}" 
+                            src='{{ users.user_profil.photo.url }}' 
                             alt="" 
                             style="width: 50px;height:50px;">
-                            {% endfor %}
+                            {% else %}
+                            <div class="surImage">None</div>
+                            {% endif %}
                         </td>
                         <td>{{users.username}}</td>
                         <td>{{users.first_name}}</td>
                         <td>{{users.last_name}}</td>
                         <td>{{users.email}}</td>
+                        <td>{{users.user_profil.role}}</td>
                         <td> 
-                            <a href="#modal-{{users.id}}">
+                            <a href="#modal-utilisateur-{{users.id}}">
                                 <button><i class="fas fa-pen"></i></button>
                             </a>
-                            <a href="#" onclick="return confirm('Voulez vous vraiment supprimer ?')">
+                            <a href="{% url 'supprimerUtilisateur' users.id %}" onclick="return confirm('Voulez vous vraiment supprimer ?')">
                                 <button><i class="fas fa-trash"></i></button>                            
                             </a>
                         </td>

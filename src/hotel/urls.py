@@ -11,6 +11,10 @@ urlpatterns = [
     path('admin/',views.listChambre,name="admin"),
     path('responsable/',views.responsable,name="responsable"),
     path('gestionUtilisateur/',views.gestionUtilisateur,name='gestionUtilisateur'),
+    path('ajoutUtilisateur/',views.ajoutUtilisateur,name='ajoutUtilisateur'),
+    path('chercherUtilisateur/',views.chercherUtilisateur,name='chercherUtilisateur'),
+    path('supprimerUtilisateur/<int:id>',views.supprimerUtilisateur,name='supprimerUtilisateur'),
+    path('modifierUtilisateur/<int:id>',views.modifierUtilisateur,name='modifierUtilisateur'),
     
     path('apropos/',views.apropos,name='apropos'),
     path('nosChambre/',views.nosChambre,name='nosChambre'),

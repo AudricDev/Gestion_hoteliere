@@ -131,6 +131,72 @@ def inscription(request):
         return redirect('inscription')
     return render(request, 'inscription.html')
 
+#formulaire d'inscription
+def ajoutUtilisateur(request):
+    if request.method == "POST":
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        if password1 == password2:
+            user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                password=password1
+            )
+            User_profil.objects.create(
+                user=user,
+                name=f"{first_name} {last_name}",
+                role="User"
+            )
+            return redirect('gestionUtilisateur')
+        messages.error(request, "Les mots de passe ne correspondent pas")
+        return redirect('gestionUtilisateur')
+    return render(request, 'gestionUtilisateur.html')
+
+#modifier utilisateur
+def modifierUtilisateur(request,id):
+    user = User.objects.get(id=id)
+    if request.method == "POST":
+        user.first_name = request.POST.get("first_name")
+        user.last_name = request.POST.get("last_name")
+        user.username = request.POST.get("username")
+        user.email = request.POST.get("email")
+        user.user_profil.role = request.POST.get("role")
+        user.save()
+    return redirect('gestionUtilisateur')
+
+
+#supprimer utilisateur
+def supprimerUtilisateur(request,id):
+    utilisateur = get_object_or_404(User,id=id)
+    utilisateur.delete()
+    return redirect('gestionUtilisateur')
+
+#cherche utilisateur
+def chercherUtilisateur(request):
+    data_input = request.GET.get("search")
+    chambre_dispo = Chambre.objects.filter(status='Disponible').count()
+    chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    reservation = Reservation.objects.all()
+    resultat = User.objects.filter(
+        Q(username__icontains = data_input) | 
+        Q(first_name__icontains = data_input)|
+        Q(email__icontains = data_input) | 
+        Q(last_name__icontains = data_input)
+        )
+    context = {
+        'users' : resultat,
+        'chambre_dispo':chambre_dispo, 
+        'chambre_occupe':chambre_occupe, 
+        'reservations':reservation 
+    }
+    return render(request,'gestionUtilisateur.html',context)  
+
 #tabeau de board
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -226,14 +292,22 @@ def modifierChambre(request, id):
 #Rechercher chambre
 def chercherChambre(request):
     data_input = request.GET.get("search")
+    chambre_dispo = Chambre.objects.filter(status='Disponible').count()
+    chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    reservation = Reservation.objects.all()
+
     resultat = Chambre.objects.filter(
         Q(titre__icontains = data_input) | 
         Q(status__icontains = data_input)
         )
     context = {
-        'chambre' : resultat 
+        'chambre' : resultat,
+        'chambre_dispo':chambre_dispo, 
+        'chambre_occupe':chambre_occupe, 
+        'reservations':reservation 
     }
     return render(request,'gestionChambre.html',context)  
+
 #gestionReservation
 def gestionReservation(request):
     if not request.user.is_authenticated:
