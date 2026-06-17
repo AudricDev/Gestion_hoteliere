@@ -168,6 +168,7 @@ def modifierUtilisateur(request,id):
         user.email = request.POST.get("email")
         user.user_profil.role = request.POST.get("role")
         user.save()
+        user.user_profil.save()
     return redirect('gestionUtilisateur')
 
 
