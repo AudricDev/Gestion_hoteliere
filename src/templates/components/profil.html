@@ -1,6 +1,10 @@
 <div class="profil">
-    <div class="email">{{user.email}}</div>
+    <div class="email_profil">{{user.username}}</div>
     <div class="photo">
-        <img src="" alt="" srcset="" style="width: 50px;height:50px; border-radius:50%;">
+        <img 
+            src="{{user.user_profil.photo.url}}" 
+            alt="" srcset="" 
+            style=""
+            class="profil_photo">
     </div>
 </div>
