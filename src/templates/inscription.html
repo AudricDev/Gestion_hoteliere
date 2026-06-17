@@ -18,6 +18,13 @@
             <div class="formulaire">
                 <form action="" method="post">
                     {% csrf_token %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <label>Nom</label>
                     <div class="mt">
                         <input type="text" name="first_name" placeholder="Entrer votre nom">

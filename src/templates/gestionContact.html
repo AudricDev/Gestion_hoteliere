@@ -1,0 +1,81 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="content">
+
+    <div class="title_page">
+        <h1>Messages de contact</h1>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="data">
+        <div class="chambre_data">
+
+            <table>
+                <tr class="entete_table">
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Sujet</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+                {% for msg in messages_contact %}
+                <tr class="datatable {% if not msg.lu %}unread{% endif %}">
+
+                    <td>{{ msg.nom }}</td>
+                    <td>{{ msg.email }}</td>
+                    <td>{{ msg.sujet }}</td>
+                    <td>{{ msg.message|truncatechars:60 }}</td>
+                    <td>{{ msg.date_envoi }}</td>
+
+                    <td>
+                        {% if msg.lu %}
+                            <span class="badge valider">Lu</span>
+                        {% else %}
+                            <span class="badge refuser">Nouveau</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="champ_btn">
+
+                        {% if not msg.lu %}
+                        <a href="{% url 'mark_contact_read' msg.id %}">
+                            <button class="valider">Marquer lu</button>
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'delete_contact' msg.id %}" onclick="confirm('Voulez vous vraiment supprimer ce message ?')">
+                            <button class="refuser">Supprimer</button>
+                        </a>
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+        {% if messages_contact.has_previous %}
+            <a href="?page={{ messages_contact.previous_page_number }}">⬅</a>
+        {% endif %}
+
+        <span>Page {{ messages_contact.number }} / {{ messages_contact.paginator.num_pages }}</span>
+
+        {% if messages_contact.has_next %}
+            <a href="?page={{ messages_contact.next_page_number }}">➡</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

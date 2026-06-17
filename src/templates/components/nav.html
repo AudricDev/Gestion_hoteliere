@@ -5,6 +5,7 @@
     <title>Gestion hotelière</title>
     {% load static %}
     <link rel="stylesheet" href=" {% static 'css/style.css' %}">
+    <link rel="stylesheet" href=" {% static 'css/styleAdmin.css' %}">
     <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
 </head>
 <body>
@@ -32,7 +33,7 @@
             </li>
             {% endif %}
             <li>
-                <a href="#footer" class="nav_link">Contact</a>
+                <a href="{% url 'contact' %}" class="nav_link">Contact</a>
             </li>
         </ul>
     </div>
@@ -40,7 +41,9 @@
         <ul>
             {% if user.is_authenticated %}
             <li class="utilisateur">
-                <i class="fas fa-user"></i> {{ user.username }}
+                <a href="#profilModal">
+                    <i class="fas fa-user"></i> {{ user.username }}
+                </a>
             </li>
             <li>
                 <a class="btn_logout"
@@ -64,3 +67,4 @@
         </ul>
     </div>
 </nav>
+{% include "components/modal.html" %}

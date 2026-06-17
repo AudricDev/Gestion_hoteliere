@@ -7,6 +7,11 @@ from django.contrib import messages
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.db import transaction
+from django.core.paginator import Paginator
+import re
+
 # Create your views here.
 def index(request):
     chambre = Chambre.objects.all()
@@ -24,13 +29,49 @@ def gestionUtilisateur(request):
     user = User.objects.all()
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    contact_count = ContactMessage.objects.filter(lu=False).count()        
     return render (request,'gestionUtilisateur.html',{
         'users':user,
         'reservations':reservation,
         'chambre_dispo':chambre_dispo,
-        'chambre_occupe':chambre_occupe
+        'chambre_occupe':chambre_occupe,
+        'contact_count':contact_count
         })
+
+#modifier profil
+@login_required
+def update_profil(request):
+    profil = request.user.user_profil
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        photo = request.FILES.get("photo")
+
+        # Modifier User 
+        user = request.user
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+
+        # Modifier User_profil
+        profil.name = f"{first_name} {last_name}"
+
+        if photo:
+            profil.photo = photo
+        profil.save()
+
+        messages.success(request, "Profil mis à jour avec succès")
+        return redirect(request.META.get('HTTP_REFERER'))
     
+    if(user.user_profil.role == "Admin"):
+        return redirect('dashboard')
+    elif user.user_profil.role == "Responsable":
+        return redirect('responsable')
+    else:
+        return redirect('index')
+        
 # affichage des chambre
 def nosChambre(request):
     chambre = Chambre.objects.all()
@@ -43,6 +84,66 @@ def avisClient(request):
 # affichage presentation de la plateform
 def apropos(request):
     return render(request,'apropos.html')
+
+# redirection contact
+def contact(request):
+    return render(request,'contact.html')
+
+# envoie message contact
+def contactMessage(request):
+    if request.method == "POST":
+        nom = request.POST.get("nom")
+        email = request.POST.get("email")
+        sujet = request.POST.get("sujet")
+        message = request.POST.get("message")
+        # Vérification simple
+        if not all([nom, email, sujet, message]):
+            messages.error(request, "Tous les champs sont obligatoires")
+            return redirect("contact")
+
+        # Sauvegarde en base
+        ContactMessage.objects.create(
+            nom=nom,
+            email=email,
+            sujet=sujet,
+            message=message
+        )
+
+        messages.success(request, "Message envoyé avec succès 👍")
+        return redirect("contact")
+    return render(request, "contact.html")
+
+#gestion contact
+@login_required
+def gestionContact(request):
+    messages_list = ContactMessage.objects.all().order_by("-date_envoi")
+    #pagination
+    
+    #10 messages par page
+    paginator = Paginator(messages_list, 10)
+    page_number = request.GET.get("page")
+    messages_page = paginator.get_page(page_number)
+    new_messages = ContactMessage.objects.filter(lu=False).count()
+    return render(request, "gestionContact.html", {
+        "messages_contact": messages_page,
+        "new_messages": new_messages,
+    })
+
+# marque le message comme lu
+def mark_contact_read(request, id):
+    msg = get_object_or_404(ContactMessage, id=id)
+    msg.lu = True
+    msg.save()
+    messages.success(request, "Message marqué comme lu")
+    return redirect("gestionContact")
+
+#supprimer message
+def delete_contact(request, id):
+    msg = get_object_or_404(ContactMessage, id=id)
+    msg.delete()
+
+    messages.success(request, "Message supprimé")
+    return redirect("gestionContact")
 
 # affichage des chambre
 def responsable(request):
@@ -113,23 +214,83 @@ def inscription(request):
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
-        if password1 == password2:
-            user = User.objects.create_user(
-                first_name=first_name,
-                last_name=last_name,
-                username=username,
-                email=email,
-                password=password1
-            )
-            User_profil.objects.create(
-                user=user,
-                name=f"{first_name} {last_name}",
-                role="User"
-            )
-            return redirect('login')
-        messages.error(request, "Les mots de passe ne correspondent pas")
-        return redirect('inscription')
-    return render(request, 'inscription.html')
+        
+        #Verification nom pour qu'il soit logique
+        if len(set(first_name.lower())) == 1:
+            messages.error(request, "Le nom saisi n'est pas valide")
+            return redirect('inscription')
+
+        #Verification nom pour qu'il soit logique
+        if len(set(last_name.lower())) == 1:
+            messages.error(request, "Le prenom saisi n'est pas valide")
+            return redirect('inscription')
+
+        #Verification nom pour qu'il soit logique
+        if len(set(username.lower())) == 1:
+            messages.error(request, "Le nom d'utilisateur saisi n'est pas valide")
+            return redirect('inscription')
+        
+        # Vérification champs vides
+        if not all([first_name, last_name, username, email, password1, password2]):
+            messages.error(request, "Tous les champs sont obligatoires.")
+            return redirect("inscription")
+
+        # Vérification mot de passe
+        if password1 != password2:
+            messages.error(request, "Les mots de passe ne correspondent pas.")
+            return redirect("inscription")
+
+        if len(password1) < 8:
+            messages.error(request, "Le mot de passe doit contenir au moins 8 caractères.")
+            return redirect("inscription")
+
+        if not re.search(r'[A-Z]', password1):
+            messages.error(request, "Le mot de passe doit contenir au moins une majuscule.")
+            return redirect("inscription")
+        
+        if not re.search(r'[a-z]', password1):
+            messages.error(request, "Le mot de passe doit contenir au moins une minuscule.")
+            return redirect("inscription")
+
+        if not re.search(r'[0-9]', password1):
+            messages.error(request, "Le mot de passe doit contenir au moins un chiffre.")
+            return redirect("inscription")
+        
+
+        # Vérification username
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Ce nom d'utilisateur existe déjà.")
+            return redirect("inscription")
+
+        # Vérification email
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Cet email est déjà utilisé.")
+            return redirect("inscription")
+
+        if not re.search(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.com$', email):
+            messages.error(request, "Cet email ne pas valide.")
+            return redirect("inscription")
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    first_name=first_name,
+                    last_name=last_name,
+                    username=username,
+                    email=email,
+                    password=password1
+                )
+                User_profil.objects.create(
+                    user=user,
+                    name=f"{first_name} {last_name}",
+                    role="User"
+                )
+            messages.success(request, "Compte créé avec succès.")
+            auth_login(request,user)
+            return redirect("index")
+        except Exception:
+            messages.error(request, "Une erreur est survenue.")
+            return redirect("inscription")
+    return render(request, "inscription.html")
 
 #formulaire d'inscription
 def ajoutUtilisateur(request):
@@ -184,6 +345,7 @@ def chercherUtilisateur(request):
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     reservation = Reservation.objects.all()
+    contact_count = ContactMessage.objects.filter(lu=False).count()        
     resultat = User.objects.filter(
         Q(username__icontains = data_input) | 
         Q(first_name__icontains = data_input)|
@@ -194,23 +356,25 @@ def chercherUtilisateur(request):
         'users' : resultat,
         'chambre_dispo':chambre_dispo, 
         'chambre_occupe':chambre_occupe, 
-        'reservations':reservation 
+        'reservations':reservation,
+        'contact_count':contact_count
     }
     return render(request,'gestionUtilisateur.html',context)  
 
 #tabeau de board
+from .models import Reservation, Chambre, ContactMessage
+
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    reservation = Reservation.objects.all()
+    reservations = Reservation.objects.all()
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
-    return render(request,'dashboard.html',{
-        'chambre_dispo':chambre_dispo,
-        'reservations':reservation,
-        'chambre_occupe':chambre_occupe
-        }
-)
+    contact_count = ContactMessage.objects.filter(lu=False).count()
+    return render(request, "dashboard.html", {
+        "reservations": reservations,
+        "chambre_dispo": chambre_dispo,
+        "chambre_occupe": chambre_occupe,
+        "contact_count": contact_count
+    })
 
 #gestionChambre
 def gestionChambre(request):
@@ -222,13 +386,15 @@ def gestionChambre(request):
     types = Type_chambre.objects.all()
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    contact_count = ContactMessage.objects.filter(lu=False).count()    
     return render (request,'gestionChambre.html',{
         'chambre':chambre,
         'hotels':hotels,
         'types': types,
         'chambre_dispo':chambre_dispo,
         'reservations':reservation,
-        'chambre_occupe':chambre_occupe
+        'chambre_occupe':chambre_occupe,
+        "contact_count": contact_count
         })
 
 # read chambre
@@ -296,7 +462,7 @@ def chercherChambre(request):
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     reservation = Reservation.objects.all()
-
+    contact_count = ContactMessage.objects.filter(lu=False).count()
     resultat = Chambre.objects.filter(
         Q(titre__icontains = data_input) | 
         Q(status__icontains = data_input)
@@ -305,7 +471,8 @@ def chercherChambre(request):
         'chambre' : resultat,
         'chambre_dispo':chambre_dispo, 
         'chambre_occupe':chambre_occupe, 
-        'reservations':reservation 
+        'reservations':reservation,
+        "contact_count": contact_count 
     }
     return render(request,'gestionChambre.html',context)  
 
@@ -319,13 +486,16 @@ def gestionReservation(request):
     types = Type_chambre.objects.all()
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    contact_count = ContactMessage.objects.filter(lu=False).count()    
     return render (request,'gestionReservation.html',{
         'chambre':chambre,
         'hotels':hotels,
         'types': types,
         'chambre_dispo':chambre_dispo,
         'reservations':reservation,
-        'chambre_occupe':chambre_occupe
+        'chambre_occupe':chambre_occupe,
+        'contact_count':contact_count
+
         })
 
 #Reservation 
@@ -444,11 +614,13 @@ def gestionEquipement(request):
     equipement = Equipement.objects.all()
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    contact_count = ContactMessage.objects.filter(lu=False).count()        
     return render (request,'gestionEquipement.html',{
         'equipements':equipement,
         'chambre_dispo':chambre_dispo,
         'chambre_occupe':chambre_occupe,
-        'reservations':reservation
+        'reservations':reservation,
+        'contact_count':contact_count
         })
 
 #gestionMenage

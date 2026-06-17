@@ -1,0 +1,48 @@
+{% include "components/nav.html" %}
+<section class="contact-banner">
+    <h1>Contactez-nous</h1>
+    <p>Nous sommes à votre disposition pour toute question ou réservation.</p>
+</section>
+<section class="contact-container">
+
+    <div class="contact-info">
+        <h2>Nos coordonnées</h2>
+        <div class="info-box">
+            <h3><i class="fa-solid fa-address-card"></i> Adresse</h3>
+            <p>Antananarivo, Madagascar</p>
+        </div>
+        <div class="info-box">
+            <h3><i class="fa-solid fa-phone"></i> Téléphone</h3>
+            <p>+261 34 79 901 31</p>
+        </div>
+        <div class="info-box">
+            <h3><i class="fa-solid fa-envelope"></i> Email</h3>
+            <p>atfatoky@gmail.com</p>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fa-solid fa-clock"></i> Horaires</h3>
+            <p>Lundi - Dimanche : 24h/24</p>
+        </div>
+    </div>
+
+    <div class="contact-form">
+        <h2>Envoyer un message</h2>
+        <form action="{% url 'contactMessage' %}" method="POST">
+            {% csrf_token %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <input type="text" name="nom" placeholder="Votre nom" value="{{user.first_name}}" required>
+            <input type="email" name="email" placeholder="Votre email" value="{{user.email}}" required>
+            <input type="text" name="sujet" placeholder="Sujet" required>
+            <textarea name="message" rows="6" placeholder="Votre message..." required></textarea>
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+</section>
+{% include "components/footer.html" %}

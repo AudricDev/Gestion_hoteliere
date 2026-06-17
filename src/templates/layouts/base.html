@@ -36,6 +36,14 @@
                 <li class="side_link {% if request.resolver_match.url_name == 'gestionReservation' %}active{% endif %}">
                     <a href="{% url 'gestionReservation' %}"><i class="fas fa-pen-to-square"></i> Reservations</a>
                 </li>
+                <li class="side_link {% if request.resolver_match.url_name == 'gestionContact' %}active{% endif %}">
+                    <a href="{% url 'gestionContact' %}">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                        {% if new_messages > 0 %}
+                            <span class="badge refuser">{{ new_messages }}</span>
+                        {% endif %}
+                </li>
                 <li class="side_link {% if request.resolver_match.url_name == 'gestionEquipement' %}active{% endif %}">
                     <a href="{% url 'gestionEquipement' %}"><i class="fas fa-toolbox"></i> Equipement</a>
                 </li>

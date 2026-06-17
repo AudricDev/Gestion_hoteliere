@@ -72,16 +72,18 @@ body{
 .logoAdmin{
     font-family: "MyFont";
     font-size: 30px;
-    color: var(--color4--);
+    color: var(--modifier--);
     text-shadow: .5px 1px 1px var(--black--);
     padding: 20px 10px;
+    text-align: center;
 }
 .logoAdmin .logo_color{
     color:var(--color1--);
 }
 .menu_sidebar{
-    width: 100%;
+    width: 90%;
     height: 90vh;
+    padding-left: 5%;
     position: relative;
 }
 .side_link,
@@ -92,19 +94,22 @@ body{
     font-size: 20px;
     display: flex;
     align-items: center;
+    margin-top: 2px;
 }
 .side_link:hover,
 .side_link.active{
     background: var(--color2--);
     border-left: 2px solid var(--modifier--);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(23,16,78,.15);
 }
 .side_link a,
 .side_link_deconnexion a{
     align-items: center;
     text-decoration: none;
     color: var(--color1--);
+    padding-bottom: 10px;
 }
-
 .content{
     width: 80%;
     height: 100vh;
@@ -288,6 +293,13 @@ table tr td a:last-child button:hover{
     opacity: .8;
     transform: scale(1.05);
 }
+.datatable td{
+    vertical-align: top;
+}
+
+.datatable:hover{
+    background: var(--color4--);
+}
 
 /* style preuve de paiement */
 .preuve-content{
@@ -298,9 +310,7 @@ table tr td a:last-child button:hover{
 .preuve-grande{
     width: 100%;
     max-height: 80vh;
-
     object-fit: contain;
-
     border-radius: 10px;
 }
 
@@ -308,19 +318,15 @@ table tr td a:last-child button:hover{
     width: 60px;
     height: 60px;
     object-fit: cover;
-
     border-radius: 10px;
     border: 2px solid var(--color2--);
-
     cursor: pointer;
-
     transition: .3s;
 }
 
 .preuve-miniature:hover{
     transform: scale(1.15);
     border-color: var(--color1--);
-
     box-shadow: 0 5px 15px rgba(0,0,0,.2);
 }
 
@@ -328,7 +334,26 @@ table tr td a:last-child button:hover{
     background: rgba(255, 0, 0, 0.15);
     color: red;
 }
+.unread{
+    background: rgba(243, 199, 4, 0.08);
+    font-weight: bold;
+}
 
+.pagination{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px;
+    font-weight: bold;
+}
+.pagination a{
+    text-decoration: none;
+    color: var(--dark--);
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--white--);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 /* ===================== MODAL MODERNE ===================== */
 
 /* Overlay */

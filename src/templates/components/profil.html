@@ -1,14 +1,16 @@
 <div class="profil">
     <div class="email_profil">{{user.username}}</div>
     <div class="photo">
-        {% if user.user_profil.photo %}
-        <img 
+        <a href="#profilModal">
+            {% if user.user_profil.photo %}
+            <img 
             src="{{user.user_profil.photo.url}}" 
             alt="" srcset="" 
             style=""
             class="profil_photo">
-        {% else %}
-        <div class="surImage">Client</div>
-        {% endif %}
+            {% else %}
+            <div class="surImage">Client</div>
+            {% endif %}
+        </a>
     </div>
 </div>
