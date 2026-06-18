@@ -42,6 +42,12 @@
 
             <form method="POST">
                 {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert">
+                            {{ message }}
+                        </div>                        {% endfor %}
+                    {% endif %}
                 <label for="">Non utilisateur</label>
                 <input type="text" name="nom" placeholder="{{user.first_name}}" value="{{user.first_name}}" disabled>
                 <label for="">Email</label>

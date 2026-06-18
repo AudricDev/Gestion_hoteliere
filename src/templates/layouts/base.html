@@ -21,6 +21,11 @@
                         <i class="fab fa-microsoft"></i> Tableau de bord
                     </a>
                 </li>
+                <li class="side_link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                    <a href="{% url 'index' %}">
+                        <i class="fa-solid fa-house"></i> Page d'accueil
+                    </a>
+                </li>
 
                 <li class="side_link {% if request.resolver_match.url_name == 'gestionUtilisateur' %}active{% endif %}">
                     <a href="{% url 'gestionUtilisateur' %}">

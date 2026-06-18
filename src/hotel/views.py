@@ -5,6 +5,7 @@ from accounts.models import *
 from django.contrib.auth import authenticate, login as auth_login,logout
 from django.contrib import messages
 from django.utils.dateparse import parse_datetime
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -500,28 +501,37 @@ def gestionReservation(request):
 
 #Reservation 
 def reserverChambre(request, id):
+    #Si l'utilisateur n'est pas connecté
     if not request.user.is_authenticated:
         return redirect('login')
+    
     chambre = get_object_or_404(Chambre, id=id)
     if request.method == "POST":
         date_arrivee = parse_datetime(request.POST.get("date_arrivee"))
         date_depart = parse_datetime(request.POST.get("date_depart"))
         nbr_pers = request.POST.get("nbr_pers")
+        if date_arrivee:
+            date_arrivee = timezone.make_aware(date_arrivee)
 
+        if date_depart:
+            date_depart = timezone.make_aware(date_depart)
         # sécurité dates
+        
         if not date_arrivee or not date_depart:
             return render(request, "reservation.html", {
                 "chambre": chambre,
                 "error": "Dates invalides"
             })
-
+    
+        if date_depart <= date_arrivee or date_arrivee < timezone.now():
+            messages.error(request, "Vérifiez les dates s'il vous plaît.")
+            return render(request, "reservation.html", {"chambre": chambre})
+        
         # calcul nuits
         nuits = (date_depart - date_arrivee).days
         if nuits <= 0:
             nuits = 1
-
         total = chambre.prix * nuits
-
         # création réservation
         reservation = Reservation.objects.create(
             nbr_pers=nbr_pers,
