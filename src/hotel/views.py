@@ -602,6 +602,8 @@ def paiement(request, reservation_id):
             capture=request.FILES.get("capture"),
             status="Non payé"
         )
+        if request.POST.get("mode_payement") == "Espèce":
+            return redirect('mesReservations', reservation.id)
         return redirect('paiement_success', reservation.id)
 
     return render(request, "formPaiement.html", {

@@ -19,15 +19,16 @@
                     <p><strong>Arrivée :</strong> {{ r.date_arrivee }}</p>
                     <p><strong>Départ :</strong> {{ r.date_depart }}</p>
                     <p><strong>Personnes :</strong> {{ r.nbr_pers }}</p>
+                    <p><strong>Mode de paiement :</strong> {{ r.payement.mode_payement }}</p>
                     <p><strong>Total :</strong> {{ r.prix_total }} Ar</p>
                 </div>
-                <div class="card_footer">
-                    {% if r.status == "En attente de validation" %}
+                {% comment %} <div class="card_footer">
+                    {% if r.status == "En attente de validation" and r.payement.mode_payement == "Espece"%}
                         <a href="{% url 'paiement' r.id %}">
                             <button>Payer</button>
                         </a>
                     {% endif %}
-                </div>
+                </div> {% endcomment %}
             </div>
             {% endfor %}
         </div>

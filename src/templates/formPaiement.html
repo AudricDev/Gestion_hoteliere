@@ -51,7 +51,7 @@
             <!-- MODE -->
             <div class="form_group">
                 <label>Mode de paiement</label>
-                <select name="mode_payement">
+                <select name="mode_payement" id="mode_paiement" onclick="toggleCapture()">
                     <option value="Espece">Espèce</option>
                     <option value="Mobile">Mobile Money</option>
                 </select>
@@ -64,7 +64,7 @@
             </div>
 
             <!-- UPLOAD -->
-            <div class="form_group">
+            <div class="form_group" id="capture">
                 <label>Capture de paiement</label>
                 <input type="file" name="capture">
             </div>
@@ -73,9 +73,18 @@
             <button type="submit" class="btn_pay">
                 Valider le paiement
             </button>
-
         </form>
-
     </div>
-
 </div>
+<script>
+    var mode = document.getElementById("mode_paiement");
+    var capture = document.getElementById("capture");
+
+    function toggleCapture() {
+        if (mode.value == "Espece") {
+            capture.style.display = "none";
+        } else {
+            capture.style.display = "block";
+        }
+    }
+</script>
