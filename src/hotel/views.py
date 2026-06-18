@@ -75,8 +75,10 @@ def update_profil(request):
         
 # affichage des chambre
 def nosChambre(request):
-    chambre = Chambre.objects.all()
-    return render(request,'nosChambre.html',{'chambres':chambre})
+    chambre = Chambre.objects.all()        
+    return render(request,'nosChambre.html',{
+        'chambres':chambre,
+        })
 
 # affichage des chambre
 def avisClient(request):
@@ -257,7 +259,6 @@ def inscription(request):
             messages.error(request, "Le mot de passe doit contenir au moins un chiffre.")
             return redirect("inscription")
         
-
         # Vérification username
         if User.objects.filter(username=username).exists():
             messages.error(request, "Ce nom d'utilisateur existe déjà.")
@@ -501,38 +502,74 @@ def gestionReservation(request):
 
 #Reservation 
 def reserverChambre(request, id):
-    #Si l'utilisateur n'est pas connecté
+
+    # Vérification connexion
     if not request.user.is_authenticated:
         return redirect('login')
-    
+
     chambre = get_object_or_404(Chambre, id=id)
     if request.method == "POST":
         date_arrivee = parse_datetime(request.POST.get("date_arrivee"))
         date_depart = parse_datetime(request.POST.get("date_depart"))
         nbr_pers = request.POST.get("nbr_pers")
+
+        # Conversion timezone
         if date_arrivee:
             date_arrivee = timezone.make_aware(date_arrivee)
-
         if date_depart:
             date_depart = timezone.make_aware(date_depart)
-        # sécurité dates
-        
+
+        # Vérification format date
         if not date_arrivee or not date_depart:
+            messages.error(request, "Dates invalides.")
             return render(request, "reservation.html", {
-                "chambre": chambre,
-                "error": "Dates invalides"
+                "chambre": chambre
             })
-    
-        if date_depart <= date_arrivee or date_arrivee < timezone.now():
-            messages.error(request, "Vérifiez les dates s'il vous plaît.")
-            return render(request, "reservation.html", {"chambre": chambre})
-        
-        # calcul nuits
+
+        # Vérification logique des dates
+        if date_arrivee < timezone.now():
+            messages.error(
+                request,
+                "La date d'arrivée ne peut pas être dans le passé."
+            )
+            return render(request, "reservation.html", {
+                "chambre": chambre
+            })
+
+        if date_depart <= date_arrivee:
+            messages.error(
+                request,
+                "La date de départ doit être après la date d'arrivée."
+            )
+            return render(request, "reservation.html", {
+                "chambre": chambre
+            })
+
+        # Vérification disponibilité chambre
+        conflit = Reservation.objects.filter(
+            chambre=chambre,
+            date_arrivee__lt=date_depart,
+            date_depart__gt=date_arrivee,
+            status__in=["En attente de validation", "Validé"]
+        ).exists()
+        if conflit:
+            messages.error(
+                request,
+                "Cette chambre est déjà réservée pendant cette période."
+            )
+            return render(request, "reservation.html", {
+                "chambre": chambre
+            })
+
+        # Calcul du nombre de nuits
         nuits = (date_depart - date_arrivee).days
+
         if nuits <= 0:
             nuits = 1
+
         total = chambre.prix * nuits
-        # création réservation
+
+        # Création réservation
         reservation = Reservation.objects.create(
             nbr_pers=nbr_pers,
             prix_total=total,
@@ -542,9 +579,16 @@ def reserverChambre(request, id):
             date_depart=date_depart,
             status="En attente de validation"
         )
-        # REDIRECTION VERS PAIEMENT sady maka ny id anle reservation
-        return redirect('paiement', reservation_id=reservation.id)
-    return render(request, "reservation.html", {"chambre": chambre})
+
+        # Redirection vers paiement
+        return redirect(
+            'paiement',
+            reservation_id=reservation.id
+        )
+
+    return render(request, "reservation.html", {
+        "chambre": chambre
+    })
 
 #liste reservation pour l'utilisateur
 def mesReservations(request):
@@ -605,7 +649,6 @@ def paiement(request, reservation_id):
         if request.POST.get("mode_payement") == "Espèce":
             return redirect('mesReservations', reservation.id)
         return redirect('paiement_success', reservation.id)
-
     return render(request, "formPaiement.html", {
         "reservation": reservation
     })
