@@ -106,7 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+# Zao ra tiana ho lasa marina ny date actuel
+TIME_ZONE = 'Indian/Antananarivo'
 
 USE_I18N = True
 

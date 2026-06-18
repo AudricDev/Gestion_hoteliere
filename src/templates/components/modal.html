@@ -329,6 +329,49 @@
     </div>
     {% endfor %}
 
+    <!-- modal formulaire modification equipement-->
+    {% for eq in equipements %}
+    <!-- MODAL MODIFICATION gestion menage-->
+    <div class="modal-modification" id="modal-equipement-{{eq.id}}">
+        <div class="modal-content">
+            <a href="{% url 'gestionEquipement' %}" class="close">
+                &times;
+            </a>
+            <form action="{% url 'modifierEquipement' eq.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="header">
+                    <div class="logoAdmin">
+                        <span class="logo_color">HOTEL</span > NAY
+                    </div>
+                </div>
+                <label for="title">Titre</label>
+                <div class="form-input">
+                    <input type="text" name="title" id="" value="{{eq.title}}">
+                </div>
+                <label for="title">Description</label>
+                <div class="form-input">
+                    <input type="text" name="description" id="" value="{{eq.description}}">
+                </div>
+                <label>Photo</label>
+                <div class="form-input">
+                    <input type="file"
+                        name="image" value="{{eq.image}}">
+                </div>
+                <div class="form-input" style="text-align: center;">
+                    {% if eq.image %}
+                    <img src="{{eq.image.url}}" alt="" style="width: 200px;height:200px; border-radius:10px; padding:2px; border:1px solid black;">
+                    {% else %}
+                    None
+                    {% endif %}
+                </div>    
+                <div class="btn_boite">
+                    <input type="submit" value="Enregistrer" class="enregistrer">
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+
 <!-- modal formulaire d'ajout utilisateur-->
     <div class="modal" id="modal-ajouter-utilisateur">
         <div class="modal-content">

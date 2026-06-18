@@ -511,6 +511,7 @@ def reserverChambre(request, id):
     if request.method == "POST":
         date_arrivee = parse_datetime(request.POST.get("date_arrivee"))
         date_depart = parse_datetime(request.POST.get("date_depart"))
+        date_reservations = timezone.now()
         nbr_pers = request.POST.get("nbr_pers")
 
         # Conversion timezone
@@ -577,6 +578,7 @@ def reserverChambre(request, id):
             chambre=chambre,
             date_arrivee=date_arrivee,
             date_depart=date_depart,
+            date_reservation=date_reservations,
             status="En attente de validation"
         )
 
@@ -727,6 +729,17 @@ def supprimerEquipement(request,id):
     equipement = get_object_or_404(Equipement,id=id)
     equipement.delete()
     return redirect('gestionEquipement')
+
+#modification equipement
+#modification chambre
+def modifierEquipement(request, id):
+    equipement = Equipement.objects.get(id=id)    
+    if request.method == "POST":
+        equipement.title = request.POST.get("title")
+        equipement.description = request.POST.get("description")
+        equipement.image = request.POST.get("image")
+        equipement.save()
+        return redirect('gestionEquipement')
 
 #ajouter photo dans chambre photo
 def ajoutPhotoChambre(request, id):

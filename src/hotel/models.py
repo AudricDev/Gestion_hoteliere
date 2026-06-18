@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 # Create your models here.
 #TABLE HOTEL
 class Hotel(models.Model):
@@ -68,7 +69,7 @@ class Reservation(models.Model):
     status = models.CharField(max_length=50,choices=ROLES_CHOISE,default='En attente de validation')
     date_arrivee = models.DateTimeField()
     date_depart = models.DateTimeField()
-    
+    date_reservation = models.DateTimeField(default=timezone.now)    
     #Relation
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     chambre = models.ForeignKey(Chambre, on_delete=models.CASCADE)

@@ -9,18 +9,16 @@
                 Une expérience simple, rapide et sécurisée.
             </p>
         </div>
-
         <!-- NAVIGATION -->
         <div class="footer-box">
             <h3>Navigation</h3>
             <ul>
                 <li><a href="{% url 'index' %}">Accueil</a></li>
-                <li><a href="#chambres">Chambres</a></li>
-                <li><a href="#avis">Avis</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="{% url 'nosChambre' %}">Chambres</a></li>
+                <li><a href="{% url 'avisClient' %}">Avis</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
             </ul>
         </div>
-
         <!-- CONTACT -->
         <div class="footer-box">
             <h3>Contact</h3>
@@ -28,7 +26,6 @@
             <p>Tél : +261 34 79 901 31</p>
             <p>Antananarivo, Madagascar</p>
         </div>
-
         <!-- RESEAUX -->
         <div class="footer-box">
             <h3>Suivez-nous</h3>

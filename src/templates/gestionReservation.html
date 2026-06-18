@@ -27,6 +27,7 @@
                     <tr class="entete_table">
                         <th>Client</th>
                         <th>Date reservation</th>
+                        <th>Réservation</th>
                         <th>Type chambre</th>
                         <th>Prix total</th>
                         <th>Paiment</th>
@@ -37,6 +38,7 @@
                     {% for reservation in reservations %}
                     <tr class="datatable">
                         <td>{{reservation.user_id.username}}</td>
+                        <td>{{reservation.date_reservation}}</td>
                         <td>{{reservation.date_arrivee}} <br>à<br> {{reservation.date_depart}}</td>
                         <td>{{reservation.chambre.type_chambre.title}}</td>
                         <td>{{reservation.prix_total}} Ar</td>

@@ -45,7 +45,7 @@
                         <td>{{ equipement.title }}</td>
                         <td>{{ equipement.description }}</td>
                         <td>
-                            <a href="#modal-{{equipement.id}}">
+                            <a href="#modal-equipement-{{equipement.id}}">
                                 <button><i class="fas fa-pen"></i></button>
                             </a>
                             <a href="{% url 'supprimerEquipement' equipement.id %}" onclick="return confirm('Voulez vous vraiment supprimer ?')">
