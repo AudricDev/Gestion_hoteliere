@@ -11,6 +11,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.core.paginator import Paginator
+from django.db.models import Sum
+from datetime import datetime
 import re
 
 # Create your views here.
@@ -31,12 +33,15 @@ def gestionUtilisateur(request):
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     contact_count = ContactMessage.objects.filter(lu=False).count()        
+    new_messages = ContactMessage.objects.filter(lu=False).count()
+    
     return render (request,'gestionUtilisateur.html',{
         'users':user,
         'reservations':reservation,
         'chambre_dispo':chambre_dispo,
         'chambre_occupe':chambre_occupe,
-        'contact_count':contact_count
+        'contact_count':contact_count,
+        "new_messages": new_messages
         })
 
 #modifier profil
@@ -73,13 +78,25 @@ def update_profil(request):
     else:
         return redirect('index')
         
-# affichage des chambre
+# affichage des chambre et mise à jour automatique
 def nosChambre(request):
-    chambre = Chambre.objects.all()        
-    return render(request,'nosChambre.html',{
-        'chambres':chambre,
-        })
-
+    maintenant = timezone.now()
+    # Remettre toutes les chambres disponibles
+    Chambre.objects.update(status="Disponible")
+    # Réservations actuellement en cours
+    reservations_actives = Reservation.objects.filter(
+        status="Validé",
+        date_arrivee__lte=maintenant,
+        date_depart__gte=maintenant
+    )
+    # Marquer les chambres occupées
+    for reservation in reservations_actives:
+        reservation.chambre.status = "Non disponible"
+        reservation.chambre.save()
+    chambres = Chambre.objects.all()
+    return render(request, 'nosChambre.html', {
+        'chambres': chambres,
+    })
 # affichage des chambre
 def avisClient(request):
     return render(request,'avisClient.html')
@@ -364,19 +381,34 @@ def chercherUtilisateur(request):
     return render(request,'gestionUtilisateur.html',context)  
 
 #tabeau de board
-from .models import Reservation, Chambre, ContactMessage
-
 def dashboard(request):
     reservations = Reservation.objects.all()
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     contact_count = ContactMessage.objects.filter(lu=False).count()
+    new_messages = ContactMessage.objects.filter(lu=False).count()
+
+    revenu_mensuel = Reservation.objects.filter(
+        status="Validé",
+        date_reservation__month=timezone.now().month
+    ).aggregate(total=Sum("prix_total"))["total"]
+    
+    arrive_du_jour = Reservation.objects.filter(
+        status="Validé",
+        date_reservation__date=timezone.now().date()
+    ).count()
+    
+    #print(Reservation.objects.values_list("status", flat=True))
     return render(request, "dashboard.html", {
         "reservations": reservations,
+        "revenu_mensuel": revenu_mensuel,
+        "arrive_du_jour": arrive_du_jour,
         "chambre_dispo": chambre_dispo,
         "chambre_occupe": chambre_occupe,
-        "contact_count": contact_count
+        "contact_count": contact_count,
+        "new_messages": new_messages
     })
+
 
 #gestionChambre
 def gestionChambre(request):
@@ -389,6 +421,7 @@ def gestionChambre(request):
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     contact_count = ContactMessage.objects.filter(lu=False).count()    
+    new_messages = ContactMessage.objects.filter(lu=False).count()
     return render (request,'gestionChambre.html',{
         'chambre':chambre,
         'hotels':hotels,
@@ -396,7 +429,8 @@ def gestionChambre(request):
         'chambre_dispo':chambre_dispo,
         'reservations':reservation,
         'chambre_occupe':chambre_occupe,
-        "contact_count": contact_count
+        "contact_count": contact_count,
+        "new_messages": new_messages
         })
 
 # read chambre
@@ -458,7 +492,7 @@ def modifierChambre(request, id):
         chambre.save()
         return redirect('gestionChambre')
 
-#Rechercher chambre
+#Rechercher chambre 
 def chercherChambre(request):
     data_input = request.GET.get("search")
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
@@ -476,7 +510,10 @@ def chercherChambre(request):
         'reservations':reservation,
         "contact_count": contact_count 
     }
-    return render(request,'gestionChambre.html',context)  
+    if request.user.user_profil.role == "Responsable":
+        return render(request,'gestionMenage.html',context)  
+    else:
+        return render(request,'gestionChambre.html',context)  
 
 #gestionReservation
 def gestionReservation(request):
@@ -489,6 +526,7 @@ def gestionReservation(request):
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     contact_count = ContactMessage.objects.filter(lu=False).count()    
+    new_messages = ContactMessage.objects.filter(lu=False).count()
     return render (request,'gestionReservation.html',{
         'chambre':chambre,
         'hotels':hotels,
@@ -496,8 +534,8 @@ def gestionReservation(request):
         'chambre_dispo':chambre_dispo,
         'reservations':reservation,
         'chambre_occupe':chambre_occupe,
-        'contact_count':contact_count
-
+        'contact_count':contact_count,
+        "new_messages": new_messages
         })
 
 #Reservation 
@@ -672,12 +710,14 @@ def gestionEquipement(request):
     chambre_dispo = Chambre.objects.filter(status='Disponible').count()
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     contact_count = ContactMessage.objects.filter(lu=False).count()        
+    new_messages = ContactMessage.objects.filter(lu=False).count()
     return render (request,'gestionEquipement.html',{
         'equipements':equipement,
         'chambre_dispo':chambre_dispo,
         'chambre_occupe':chambre_occupe,
         'reservations':reservation,
-        'contact_count':contact_count
+        'contact_count':contact_count,
+        "new_messages": new_messages
         })
 
 #gestionMenage

@@ -37,8 +37,8 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <input type="text" name="nom" placeholder="Votre nom" value="{{user.first_name}}" required>
-            <input type="email" name="email" placeholder="Votre email" value="{{user.email}}" required>
+            <input type="text" name="nom" placeholder="Votre nom" value="{{user.first_name}}" disabled required>
+            <input type="email" name="email" placeholder="Votre email" value="{{user.email}}" disabled required>
             <input type="text" name="sujet" placeholder="Sujet" required>
             <textarea name="message" rows="6" placeholder="Votre message..." required></textarea>
             <button type="submit">Envoyer</button>

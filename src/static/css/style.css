@@ -552,7 +552,7 @@ header{
 }
 
 .presentation_text p{
-    color: var(--color2--);
+    color: var(--color1--);
     line-height: 1.8;
     font-size: 18px;
     text-align: justify;
@@ -1686,7 +1686,7 @@ header{
 }
 
 .info-box p{
-    color: var(--color2--);
+    color: var(--dark--);
 }
 
 /* FORMULAIRE */

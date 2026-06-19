@@ -31,6 +31,11 @@
             <li>
                 <a href="{% url 'mesReservations' %}" class="nav_link {% if request.resolver_match.url_name == 'mesReservations' %}active{% endif %}">Réservations</a>
             </li>
+            {% if user.user_profil.role == "Admin" %}
+            <li>
+                <a href="{% url 'dashboard' %}" class="nav_link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Admin</a>
+            </li>
+            {% endif %}
             {% endif %}
             <li>
                 <a href="{% url 'contact' %}" class="nav_link">Contact</a>

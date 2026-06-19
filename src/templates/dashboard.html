@@ -6,4 +6,21 @@
             {% include "components/profil.html" %}
         </div>
         {% include "components/card.html" %}
+    <div class="list_card">
+        <div class="cardb">
+            <div class="card_icon"><i class="fas fa-chart-line card_icon"></i></div>
+            <div class="title">Revenu mensuel</div>
+            <div class="nombre">
+                {{ revenu_mensuel|default:"0" }} Ar
+            </div>
+        </div>
+        
+        <div class="cardb">
+            <div class="card_icon"><i class="fa-solid fa-person-chalkboard"></i></div>
+            <div class="title">Arrivée du jour</div>
+            <div class="nombre">
+                {{ arrive_du_jour }}
+            </div>
+        </div>
+    </div>
 {% endblock  %}

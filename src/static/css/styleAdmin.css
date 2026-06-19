@@ -145,12 +145,23 @@ body{
     transition: .3s;
     padding: 25px;
 }
+.cardb{
+    width: 48.5%;
+    min-height: 140px;
+    background: var(--white--);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(23,16,78,.08);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .3s;
+    padding: 25px;
+}
 
-.card:hover{
+.card:hover,.cardb:hover{
     transform: translateY(-8px);
     box-shadow: 0 10px 25px rgba(23,16,78,.15);
 }
-
 .card_icon{
     position: absolute;
     top: 20px;
@@ -159,13 +170,13 @@ body{
     color: rgba(23,16,78,.12);
 }
 
-.card .title{
+.card .title,.cardb .title{
     color: var(--color1--);
     font-size: 18px;
     font-weight: 600;
     margin-top: 25px;
 }
-.card .nombre{
+.card .nombre,.cardb .nombre{
     position: static;
     justify-content: flex-start;
     align-items: flex-end;
@@ -175,7 +186,6 @@ body{
     font-weight: bold;
     color: var(--color1--);
 }
-
 
 /* DATATABLE */
 .data{
