@@ -40,6 +40,9 @@ urlpatterns = [
     
     path("reservation/valider/<int:id>/",views.valider_reservation,name="valider_reservation"),
     path("reservation/refuser/<int:id>/",views.refuser_reservation,name="refuser_reservation"),
+    path("valideAvis/<int:id>/",views.valideAvis,name="valideAvis"),
+    path("refuseAvis/<int:id>/",views.refuseAvis,name="refuseAvis"),
+    path("supprimerAvis/<int:id>/",views.supprimerAvis,name="supprimerAvis"),
     
     path('gestionEquipement/',views.gestionEquipement,name='gestionEquipement'),
     path('ajoutEquipement/',views.ajoutEquipement,name='ajoutEquipement'),

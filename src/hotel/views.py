@@ -17,7 +17,7 @@ import re,math
 # Create your views here.
 def index(request):
     chambre = Chambre.objects.all()
-    avis = Avis.objects.select_related("user").order_by("-id")
+    avis = Avis.objects.filter(status="Validé").select_related("user").order_by("-id")
     return render(request,'layouts/index.html',{
         'chambres':chambre,
         "avis": avis
@@ -388,7 +388,7 @@ def dashboard(request):
     chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
     contact_count = ContactMessage.objects.filter(lu=False).count()
     new_messages = ContactMessage.objects.filter(lu=False).count()
-
+    avis = Avis.objects.all()
     revenu_mensuel = Reservation.objects.filter(
         status="Validé",
         date_reservation__month=timezone.now().month
@@ -407,7 +407,8 @@ def dashboard(request):
         "chambre_dispo": chambre_dispo,
         "chambre_occupe": chambre_occupe,
         "contact_count": contact_count,
-        "new_messages": new_messages
+        "new_messages": new_messages,
+        "avis": avis,
     })
 
 
@@ -781,11 +782,12 @@ def supprimerEquipement(request,id):
 #modification equipement
 #modification chambre
 def modifierEquipement(request, id):
-    equipement = Equipement.objects.get(id=id)    
+    equipement = Equipement.objects.get(id=id)
     if request.method == "POST":
         equipement.title = request.POST.get("title")
         equipement.description = request.POST.get("description")
-        equipement.image = request.POST.get("image")
+        if "image" in request.FILES:
+            equipement.image = request.FILES["image"]
         equipement.save()
         return redirect('gestionEquipement')
 
@@ -802,13 +804,30 @@ def ajoutPhotoChambre(request, id):
 
 #AVIS CLIENT
 def avisClient(request):
-    avis = Avis.objects.select_related("user").order_by("-id")
+    avis = Avis.objects.filter(status="Validé").select_related("user").order_by("-id")
     return render(request, "avisClient.html", {
         "avis": avis
     })
+#valider avis client
+def valideAvis(request,id):
+    avis = Avis.objects.get(id=id)
+    avis.status = "Validé"
+    avis.save()
+    return redirect("dashboard")
 
+#refuser avis
+def refuseAvis(request,id):
+    avis = Avis.objects.get(id=id)
+    avis.status = "Refusé"
+    avis.save()
+    return redirect("dashboard")
+#supprimer un avis
+def supprimerAvis(request,id):
+    avis = Avis.objects.filter(id=id)
+    avis.delete()
+    return redirect("dashboard")
+    
 #ajout avis
-
 @login_required
 def ajouter_avis(request):
     if request.method == "POST":

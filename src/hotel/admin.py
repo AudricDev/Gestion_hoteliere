@@ -44,5 +44,5 @@ admin.site.register(Payement,PaymentAdmin )
 
 #affichage avis client
 class AvisClientAdmin(admin.ModelAdmin):
-    list_display = ('user','message','note','created_at')
+    list_display = ('user','message','note','created_at','status')
 admin.site.register(Avis,AvisClientAdmin )

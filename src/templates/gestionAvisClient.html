@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="content">
+    <div class="title_page">
+        <h1>Avis des client</h1>
+    </div>
+    <div class="data">
+        <div class="chambre_data">
+            <table>
+                <tr class="entete_table">
+                    <th>Client</th>
+                    <th>Message</th>
+                    <th>Note</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+                {% for avis in avis %}
+                <tr class="datatable">
+                    <td>{{ avis.user.username }}</td>
+                    <td>{{ avis.message }}</td>
+                    <td>{{ avis.note }}</td>
+                    <td>{{ avis.created_at}}</td>
+                    <td>{{ avis.status }}</td>
+                    <td>
+                        {% if avis.status == "Validé" %}
+                            <span class="badge valider">Validé</span>
+                        {% else %}
+                            <span class="badge refuser">Refusé</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="champ_btn">
+                        <a href="{% url 'valideAvis' avis.id %}">
+                            <button class="valider">Marquer lu</button>
+                        </a>
+                        <a href="{% url 'refuseAvis' avis.id %}" onclick="confirm('Voulez vous vraiment supprimer ce message ?')">
+                            <button class="refuser">Supprimer</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+        {% if messages_contact.has_previous %}
+            <a href="?page={{ messages_contact.previous_page_number }}">⬅</a>
+        {% endif %}
+
+        <span>Page {{ messages_contact.number }} / {{ messages_contact.paginator.num_pages }}</span>
+
+        {% if messages_contact.has_next %}
+            <a href="?page={{ messages_contact.next_page_number }}">➡</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
