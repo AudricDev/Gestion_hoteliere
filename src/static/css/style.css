@@ -1728,12 +1728,588 @@ header{
 }
 
 /* RESPONSIVE */
-@media (max-width: 768px){
-    .contact-container{
-        grid-template-columns: 1fr;
+/* responsive admin */
+/* ==========================================================================
+   RESPONSIVE : PETITS ÉCRANS (Cible Principale : 360px et moins)
+   ========================================================================== */
+@media screen and (max-width: 480px) {
+    /* Ajustements généraux */
+    body {
+        font-size: 14px;
     }
 
-    .contact-banner h1{
-        font-size: 2rem;
+    /* Section Titres globaux */
+    .titreSection {
+        padding: 40px 15px;
+        height: auto;
+        font-size: 20px;
+    }
+    .titreSection h1 {
+        font-size: 22px;
+    }
+
+    /* Structure Header / Hero (Si présent dans vos components) */
+    header, .fond_image, .content1 {
+        height: auto;
+        min-height: 60vh;
+    }
+
+    /* SECTION : QUI SOMMES-NOUS ? */
+    .presentation {
+        flex-direction: column;
+        padding: 40px 20px;
+        gap: 30px;
+        min-height: auto;
+    }
+
+    .presentation_image, 
+    .presentation_text {
+        width: 100%; /* Occupe toute la largeur */
+    }
+
+    .presentation_image {
+        height: 250px; /* Réduction de la hauteur de l'image animée */
+    }
+
+    .presentation_text h2 {
+        font-size: 24px;
+        line-height: 1.3;
+    }
+
+    .presentation_text p {
+        font-size: 15px;
+        text-align: left; /* Plus lisible sur petit écran */
+    }
+
+    /* Grille des petits picto-services */
+    .services_hotel {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonnes au lieu de 3 */
+        gap: 10px;
+        font-size: 13px;
+    }
+
+    .presentation_text button {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+
+    /* SECTION : NOS CHAMBRES */
+    .contenuChambre {
+        padding: 30px 15px;
+        gap: 20px;
+    }
+
+    .cardChambre {
+        width: 100%; /* La carte s'adapte à l'écran de 360px */
+        max-width: 320px;
+        height: 380px;
+    }
+
+    /* SECTION : AVIS CLIENTS */
+    #avis {
+        padding: 40px 15px;
+    }
+
+    .avis-card {
+        width: 100%; /* Full width sur mobile */
+        max-width: 330px;
+    }
+
+    .btn_ajouter_avis {
+        font-size: 16px;
+        padding: 0.8rem 1.5rem;
+        width: 90%;
+    }
+
+    /* FOOTER RESPONSIVE */
+    .footer-container {
+        grid-template-columns: 1fr; /* Tout sur une seule colonne */
+        padding: 0 20px;
+        gap: 25px;
+    }
+}
+
+/* Spécificité stricte pour les écrans ultra-compacts (Ex: 360px) */
+@media screen and (max-width: 360px) {
+    .services_hotel {
+        grid-template-columns: 1fr; /* 1 seul service par ligne si l'écran est trop étroit */
+    }
+    .logo {
+        font-size: 22px;
+    }
+}
+
+
+/* ==========================================================================
+   RESPONSIVE : ÉCRANS ULTRA-LARGES (Cible Principale : 2400px et plus)
+   ========================================================================== */
+@media screen and (min-width: 1920px) {
+    /* On crée un conteneur virtuel pour éviter que les sections s'étirent à l'infini */
+    main, .navbar, .footer-container {
+        
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    /* On s'assure que l'arrière-plan global reste harmonieux */
+    body {
+        background: var(--color4--);
+    }
+
+    /* Ajustement de la section présentation pour combler l'espace proprement */
+    .presentation {
+        min-height: 50vh;
+        gap: 100px;
+        padding: 100px 0;
+    }
+
+    .presentation_image {
+        height: 60vh;
+        max-height: 700px;
+    }
+    .presentation_image .image{
+        background-size: cover;
+    }
+
+    /* Augmentation proportionnelle des polices pour les écrans 2K/4K */
+    .presentation_text h2 {
+        font-size: 48px;
+    }
+
+    .presentation_text p {
+        font-size: 22px;
+        line-height: 2;
+    }
+
+    .services_hotel {
+        font-size: 20px;
+        gap: 30px;
+    }
+
+    /* Redimensionnement des grilles de cartes (chambres et avis) */
+    .contenuChambre {
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 40px;
+        padding: 100px 0;
+    }
+
+    .cardChambre {
+        width: 350px;  /* Cartes légèrement plus grandes et plus lisibles */
+        height: 430px;
+    }
+
+    .avis-container {
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 30px;
+    }
+
+    .avis-card {
+        width: 360px;
+        padding: 30px;
+    }
+    
+    .avis-header h1 {
+        font-size: 42px;
+    }
+}
+
+/* --- CSS DE BASE POUR LE BOUTON BURGER --- */
+.menu_toggle {
+    display: none; /* Masqué sur écran d'ordinateur (Large) */
+    background: none;
+    border: none;
+    color: var(--color1--);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    transition: 0.3s;
+}
+/* --- RESPONSIVE TABLETTES ET MOBILES (Max 992px) --- */
+@media screen and (max-width: 992px) {
+    .navbar {
+        height: auto !important;
+        padding: 10px 15px !important;
+        display: flex !important;
+        flex-direction: row !important;  /* Force l'alignement horizontal */
+        flex-wrap: wrap !important;      /* Permet uniquement au menu déroulant de passer en dessous */
+        justify-content: space-between !important; /* Calile logo à gauche, profil au milieu, burger à droite */
+        align-items: center !important;
+    }
+
+    /* 1. LOGO (Largeur automatique pour laisser la place aux autres) */
+    .logo {
+        order: 1 !important;
+        width: auto !important;          /* Empêche de prendre 100% */
+        display: inline-block !important;
+        margin: 0 !important;
+        font-size: 18px !important;       /* Légèrement réduit pour les petits écrans */
+    }
+
+    /* 2. ZONE DE CONNEXION / PROFIL AU MILIEU */
+    .con {
+        order: 2 !important;
+        width: auto !important;          /* Empêche de prendre 100% */
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .con ul {
+        display: flex !important;
+        flex-direction: row !important;  /* Force le pseudo et déconnexion côte à côte */
+        align-items: center !important;
+        gap: 6px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        list-style: none !important;
+    }
+
+    .utilisateur {
+        font-size: 11px !important;
+        padding: 4px !important;
+        margin: 0 !important;
+    }
+
+    .btn_logout {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        margin: 0 !important;
+    }
+
+    /* 3. BOUTON BURGER TOUT À DROITE */
+    .menu_toggle {
+        display: block !important;
+        order: 3 !important;
+        width: auto !important;          /* Empêche de prendre 100% */
+        margin: 0 !important;
+        padding: 5px !important;
+        font-size: 20px !important;
+    }
+
+    /* 4. MENU DÉROULANT (Reste inchangé, passe en dessous au clic) */
+    .nav_item {
+        display: none; 
+        width: 100% !important;   /* Lui seul prend 100% pour aller à la ligne */
+        order: 4 !important;      
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 10px;
+        margin-top: 10px !important;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+        padding: 10px 0;
+    }
+
+    .nav_item.open {
+        display: block !important;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .nav_item ul {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .nav_item ul li {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .nav_link {
+        display: block !important;
+        width: 100% !important;
+        padding: 12px 0 !important;
+        font-size: 14px !important;
+    }
+}
+
+/* Petite animation fluide d'apparition */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* ==========================================================================
+   COMPLÉMENT RESPONSIVE : NAV & HEADER HERO
+   ========================================================================== */
+
+/* --- AJUSTEMENTS POUR LE MENU (PETITS ÉCRANS) --- */
+@media screen and (max-width: 992px) {
+    .navbar {
+        height: auto;
+        padding: 15px 20px;
+        flex-direction: column; /* On empile les éléments proprement */
+        gap: 15px;
+    }
+
+    .nav_item ul {
+        flex-wrap: wrap; /* Évite que le menu déborde horizontalement */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .nav_link {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .con ul {
+        gap: 8px;
+    }
+    
+    .btn_login, .btn_register, .btn_logout {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+
+/* --- CIBLE STRICTE : 360px (Ex: Mobile compact) --- */
+@media screen and (max-width: 480px) {
+    /* Barre de navigation ultra-compacte */
+    .navbar {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .logo {
+        font-size: 22px;
+    }
+
+    .nav_item ul {
+        gap: 5px; /* Rapproche les liens */
+    }
+
+    .nav_link {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+
+    .con ul {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* STRUCTURE DU HEADER (HERO) SUR MOBILE */
+    header {
+        height: auto; /* On lâche le 100vh pour éviter les textes coupés */
+        min-height: calc(100vh - 75px);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .content, .content1 {
+        position: relative;
+        height: auto;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 15px;
+    }
+
+    /* La forme polygonale jaune/grise s'adapte en arrière-plan complet */
+    .styleform {
+        width: 100%;
+        height: 100%;
+        clip-path: none; /* Le polygone rend mal à 360px, on passe en overlay complet dégradé */
+        background: rgba(23, 16, 78, 0.8); /* Rappel de votre var(--color1--) pour lisibilité */
+    }
+
+    /* Zone de texte du Hero */
+    .titre {
+        position: relative;
+        width: 100%;
+        top: 0;
+        transform: none;
+        margin-left: 0;
+        padding: 0 10px;
+    }
+
+    .titre .grand_titre h1 {
+        font-size: 26px;
+        line-height: 1.2;
+    }
+
+    .titre .sous_titre h2 {
+        font-size: 14px;
+        font-weight: normal;
+        margin-top: 15px;
+        line-height: 1.4;
+    }
+
+    /* Repositionnement du gros bouton "Réserver maintenant" */
+    .btn_item {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        padding: 20px 15px 40px 15px;
+        background: var(--color4--); /* S'intègre au début de la section suivante */
+    }
+
+    .btn_item a {
+        display: block;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .btn_item a button {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 18px; /* Évite l'énorme texte 30px sur un écran de 360px */
+        animation: none; /* Désactivation ou réduction de l'animation pour éviter les bugs tactiles */
+    }
+}
+
+
+/* ==========================================================================
+   CIBLE STRICTE : ÉCRANS ULTRA-LARGES (2400px et plus)
+   ========================================================================== */
+@media screen and (min-width: 2200px) {
+    /* Limitation de la largeur de la navbar pour éviter l'étirement infini */
+    .navbar {
+        margin: 0 auto;
+        height: 90px;
+    }
+
+    .logo {
+        font-size: 36px;
+    }
+
+    .nav_link {
+        font-size: 20px;
+        padding: 10px 18px;
+    }
+
+    .btn_login, .btn_register, .btn_logout {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+
+    /* HERO SUR ÉCRAN GÉANT */
+    .content, .content1 {
+        max-width: 2400px;
+        margin: 0 auto;
+    }
+
+    .titre {
+        width: 45%;
+        margin-left: 100px;
+    }
+
+    .titre .grand_titre h1 {
+        font-size: 52px;
+    }
+
+    .titre .sous_titre h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin-top: 20px;
+    }
+
+    .btn_item {
+        left: 10%;
+        top: 75%;
+    }
+
+    .btn_item a button {
+        padding: 2rem 4rem;
+        font-size: 36px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    
+    /* 1. FORCE LE HEADER À PRENDRE TOUT L'ÉCRAN */
+    header {
+        position: relative;
+        width: 100% !important;
+        min-height: 80vh !important;
+        height: auto !important;
+        overflow: hidden;
+    }
+
+    .content {
+        position: relative;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 2. CORRECTION DE L'IMAGE DE FOND */
+    .fond_image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;   /* Force l'image à couvrir toute la largeur */
+        height: 100% !important;  /* Force l'image à couvrir toute la hauteur */
+        background-size: cover !important; /* Ajuste l'image sans la déformer */
+        background-position: center !important;
+        z-index: 1;
+    }
+
+    /* 3. RENDRE LE CONTENU BLEU FLUIDE ET CENTRÉ */
+    .content1 {
+        position: relative;
+        z-index: 2; /* Se place au-dessus de l'image */
+        width: 100% !important;
+        min-height: 80vh;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 40px 20px !important; /* Ajoute un espace de sécurité sur les côtés */
+        box-sizing: border-box !important;
+    }
+
+    /* 4. TRANSFORMATION DU POLYGONE EN OVERLAY PROPRE */
+    .styleform {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        clip-path: none !important; /* Supprime le polygone qui brise le design sur mobile */
+        background: rgba(23, 16, 78, 0.75) !important; /* Voile bleu transparent sur TOUTE la surface */
+        z-index: -1; /* Reste derrière le texte */
+    }
+
+    /* 5. AJUSTEMENT DU TEXTE (CENTRE ET LISIBLE) */
+    .titre {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        margin: 0 !important;
+        text-align: center !important; /* Centre tout le texte */
+        color: #ffffff !important;
+    }
+
+    .grand_titre h1 {
+        font-size: 24px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .sous_titre h2 {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.5 !important;
+        margin-bottom: 10px !important;
     }
 }

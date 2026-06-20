@@ -83,6 +83,7 @@ def nosChambre(request):
     maintenant = timezone.now()
     # Remettre toutes les chambres disponibles
     Chambre.objects.update(status="Disponible")
+    
     # Réservations actuellement en cours
     reservations_actives = Reservation.objects.filter(
         status="Validé",
@@ -97,7 +98,8 @@ def nosChambre(request):
     return render(request, 'nosChambre.html', {
         'chambres': chambres,
     })
-# affichage des chambre
+    
+# affichage des avis client
 def avisClient(request):
     return render(request,'avisClient.html')
 

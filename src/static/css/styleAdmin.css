@@ -588,3 +588,173 @@ table tr td a:last-child button:hover{
 
     display: none;
 }
+
+/* ==========================================================================
+   COMPLÉMENT RESPONSIVE PARFAIT : DASHBOARD & GESTION ADMIN
+   ========================================================================== */
+
+@media screen and (max-width: 1024px) {
+    /* 1. RÉORGANISATION DE LA STRUCTURE GLOBALE */
+    .admin_content {
+        flex-direction: column; /* On empile la sidebar et le contenu principal */
+        height: auto;
+    }
+
+    /* La sidebar passe en haut comme un bandeau de navigation */
+    .sidebar {
+        width: 100%;
+        position: relative; /* On lâche le mode fixé */
+        height: auto;
+        box-shadow: 0 4px 10px rgba(23,16,78,.05);
+    }
+
+    .logoAdmin {
+        padding: 15px 10px;
+        font-size: 26px;
+    }
+
+    .menu_sidebar {
+        width: 100%;
+        height: auto;
+        padding: 0 15px 15px 15px;
+    }
+
+    /* Alignement horizontal des liens du menu pour former une barre de navigation */
+    .menu_sidebar ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap; /* Permet de passer à la ligne si beaucoup d'onglets */
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .side_link, .side_link_deconnexion {
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 8px 12px;
+        font-size: 14px;
+        margin-top: 0;
+    }
+
+    .side_link:hover, .side_link.active {
+        border-left: none;
+        border-bottom: 2px solid var(--modifier--);
+        border-radius: 6px;
+    }
+    
+    .side_link a, .side_link_deconnexion a {
+        padding-bottom: 0;
+    }
+
+    /* Le contenu principal prend désormais toute la largeur */
+    .content {
+        width: 100%;
+        margin: 0; /* Supprime le décalage de la barre latérale */
+        padding: 10px;
+        height: auto;
+    }
+
+    .title_page {
+        flex-direction: column; /* Titre en haut, profil en dessous */
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px 10px;
+    }
+
+    .title_page h1 {
+        font-size: 24px;
+    }
+
+    .title_page .profil {
+        width: 100%;
+        justify-content: space-between; /* Aligne proprement les éléments du sous-profil */
+        gap: 15px;
+    }
+
+    /* 2. RESPONSIVE DES CARTES STATISTIQUES (DASHBOARD) */
+    .list_card {
+        height: auto;
+        flex-direction: column; /* Empilement vertical des cartes */
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .card, .cardb {
+        width: 100%; /* Les cartes occupent toute la largeur */
+        min-height: 110px;
+        padding: 15px 20px;
+    }
+
+    .card .title, .cardb .title {
+        margin-top: 10px;
+        font-size: 15px;
+    }
+
+    .card .nombre, .cardb .nombre {
+        margin-top: 5px;
+        font-size: 32px;
+    }
+    
+    .card_icon {
+        font-size: 28px;
+        top: 15px;
+        right: 15px;
+    }
+}
+
+/* --- OPTIMISATIONS POUR LES SMARTPHONES ET TABLEAUX (Max 600px) --- */
+@media screen and (max-width: 600px) {
+    /* Menu sidebar plus compact sur petit téléphone */
+    .side_link, .side_link_deconnexion {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    /* Barre d'outils (Bouton ajouter + Barre de recherche) */
+    .champ_btn {
+        flex-direction: column; /* Empile le bouton d'ajout et la recherche */
+        align-items: stretch;
+        gap: 12px;
+        padding: 10px 0;
+    }
+
+    .btn_ajout, .search form {
+        width: 100%;
+    }
+
+    .btn_ajouter {
+        width: 100%;
+        text-align: center;
+    }
+
+    .search form {
+        display: flex;
+    }
+
+    .search .bar_search {
+        flex-grow: 1; /* La barre de recherche prend tout l'espace disponible */
+    }
+
+    /* 3. SÉCURISATION CONTRE LE DÉBORDEMENT DES TABLEAUX DATA */
+    .chambre_data {
+        padding: 5px 0;
+        width: 100%;
+        overflow-x: auto; /* Active un scroll horizontal propre SI le tableau est trop large */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        margin: 10px 0;
+        min-width: 650px; /* Force une largeur minimale pour garder les colonnes lisibles */
+    }
+
+    table tr th, table tr td {
+        padding: 8px 5px;
+        font-size: 13px;
+    }
+    
+    table button {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
+}
