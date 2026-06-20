@@ -13,8 +13,7 @@ from django.db import transaction
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from datetime import datetime
-import re
-
+import re,math
 # Create your views here.
 def index(request):
     chambre = Chambre.objects.all()
@@ -554,7 +553,7 @@ def reserverChambre(request, id):
         date_reservations = timezone.now()
         nbr_pers = request.POST.get("nbr_pers")
 
-        # Conversion timezone
+        # Conversion parse_datetime ho lasa timezone
         if date_arrivee:
             date_arrivee = timezone.make_aware(date_arrivee)
         if date_depart:
@@ -567,7 +566,7 @@ def reserverChambre(request, id):
                 "chambre": chambre
             })
 
-        # Vérification logique des dates
+        # Vérification logique des dates, tsy tokony ho afaka mampiditra date efa passé 
         if date_arrivee < timezone.now():
             messages.error(
                 request,
@@ -593,6 +592,7 @@ def reserverChambre(request, id):
             date_depart__gt=date_arrivee,
             status__in=["En attente de validation", "Validé"]
         ).exists()
+        
         if conflit:
             messages.error(
                 request,
@@ -602,14 +602,20 @@ def reserverChambre(request, id):
                 "chambre": chambre
             })
 
-        # Calcul du nombre de nuits
-        nuits = (date_depart - date_arrivee).days
+        # Calcul prix 
+        if chambre.type_chambre.title == "Chambre double":
+            diff = date_depart - date_arrivee
+            # calcul heures sady arrondisena
+            heures = math.ceil(diff.total_seconds() / 3600)
+            # total heure
+            total = chambre.prix * heures
+        else:        
+            nuits = (date_depart - date_arrivee).days
 
-        if nuits <= 0:
-            nuits = 1
-
-        total = chambre.prix * nuits
-
+            if nuits <= 0:
+                nuits = 1
+            total = chambre.prix * nuits
+        
         # Création réservation
         reservation = Reservation.objects.create(
             nbr_pers=nbr_pers,

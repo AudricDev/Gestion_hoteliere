@@ -40,7 +40,12 @@
                             </div>
 
                             <div class="prix">
-                                {{ chambre.prix }} Ar / nuit
+                                {{ chambre.prix }} Ar 
+                                {% if chambre.type_chambre.title == "Chambre double" %}
+                                    / heure
+                                {% else %}
+                                    / nuit
+                                {% endif %}
                             </div>
 
                             <div class="extra_info">

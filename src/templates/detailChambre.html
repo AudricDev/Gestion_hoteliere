@@ -39,7 +39,13 @@
             {{ details.type_chambre.description }}
         </p>
         <div class="info_box">
-            <div><strong>💰 Prix :</strong> {{ details.prix }} Ar / nuit</div>
+            <div><strong>💰 Prix :</strong> {{ details.prix }} Ar 
+            {% if details.type_chambre.title == "Chambre double" %}
+                / heure
+            {% else %}
+                / nuit
+            {% endif %}
+            </div>
             <div><strong>👤 Capacité :</strong> {{ details.nbr_personne }} personnes</div>
         </div>
         <div class="btn_items">

@@ -16,7 +16,15 @@
                 {% endfor %}
             </div>
             <h2>{{ chambre.titre }}</h2>
-            <p><strong>Prix :</strong> {{ chambre.prix }} Ar / nuit</p>
+            <h3>{{ chambre.type_chambre.title }}</h3>
+            <p>
+                <strong>Prix :</strong> {{ chambre.prix }} Ar 
+                {% if chambre.type_chambre.title == "Chambre double" %}
+                    / heure
+                {% else %}
+                    / nuit
+                {% endif %}
+            </p>
             {% if chambre.status == "Disponible" %}
                 <div class="badge dispo">Disponible</div>
             {% else %}

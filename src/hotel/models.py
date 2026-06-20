@@ -101,9 +101,14 @@ class Payement(models.Model):
     
 #AVIS CLIENT
 class Avis(models.Model):
+    STATUS_CHOICE = (
+        ('Validé','Validé'),
+        ('Refusé','Refusé'),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     note = models.IntegerField()
+    status = models.CharField(max_length=50,choices=STATUS_CHOICE,default='Refusé')
     created_at = models.DateTimeField(auto_now_add=True)
     
 #CONTACT
