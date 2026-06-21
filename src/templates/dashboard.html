@@ -2,89 +2,92 @@
 {% block content %}
     <div class="content">
         <div class="title_page">
-            <h1>Tableau de board</h1>
+            <h1>Tableau de bord</h1>
             {% include "components/profil.html" %}
         </div>
-        {% include "components/card.html" %}
-    <div class="list_card">
-        <div class="cardb">
-            <div class="card_icon"><i class="fas fa-chart-line card_icon"></i></div>
-            <div class="title">Revenu mensuel</div>
-            <div class="nombre">
-                {{ revenu_mensuel|default:"0" }} Ar
-            </div>
-        </div>
         
-        <div class="cardb">
-            <div class="card_icon"><i class="fa-solid fa-person-chalkboard"></i></div>
-            <div class="title">Arrivée du jour</div>
-            <div class="nombre">
-                {{ arrive_du_jour }}
+        {% include "components/card.html" %}
+        
+        <div class="list_card">
+            <div class="cardb">
+                <div class="card_icon"><i class="fas fa-chart-line"></i></div>
+                <div class="title">Revenu mensuel</div>
+                <div class="nombre">
+                    {{ revenu_mensuel|default:"0" }} Ar
+                </div>
+            </div>
+            
+            <div class="cardb">
+                <div class="card_icon"><i class="fa-solid fa-person-chalkboard"></i></div>
+                <div class="title">Arrivée du jour</div>
+                <div class="nombre">
+                    {{ arrive_du_jour }}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="title_page">
-        <h1>Avis des client</h1>
-    </div>
-    {% if avis %}
-    <div class="data">
-        <div class="chambre_data">
-            <table>
-                <tr class="entete_table">
-                    <th>Client</th>
-                    <th>Message</th>
-                    <th>Note</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
 
-                {% for avis in avis %}
-                <tr class="datatable">
-                    <td>{{ avis.user.username }}</td>
-                    <td>{{ avis.message }}</td>
-                    <td>{{ avis.note }}</td>
-                    <td>{{ avis.created_at}}</td>
-                    <td>
-                        {% if avis.status == "Validé" %}
-                            <span class="badge valider">Validé</span>
-                        {% else %}
-                            <span class="badge refuser">Refusé</span>
-                        {% endif %}
-                    </td>
+        <div class="title_page">
+            <h1>Avis des clients</h1>
+        </div>
 
-                    <td class="champ_btn">
-                        <a href="{% url 'valideAvis' avis.id %}">
-                            <button class="valider">Valider</button>
-                        </a>
-                        <a href="{% url 'refuseAvis' avis.id %}" onclick="confirm('Voulez vous vraiment refuser cet avis ?')">
-                            <button class="refuser">Refuser</button>
-                        </a>
-                        <a href="{% url 'supprimerAvis' avis.id %}" onclick="confirm('Voulez vous vraiment supprimer cet avis ?')">
-                            <button class="refuser">Supprimer</button>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
+        {% if avis %}
+        <div class="data">
+            <div class="chambre_data">
+                <table>
+                    <thead>
+                        <tr class="entete_table">
+                            <th>Client</th>
+                            <th>Message</th>
+                            <th>Note</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in avis %} <tr class="datatable">
+                            <td data-label="Client">{{ item.user.username }}</td>
+                            <td data-label="Message">{{ item.message }}</td>
+                            <td data-label="Note">{{ item.note }}/5</td>
+                            <td data-label="Date">{{ item.created_at|date:"d/m/Y" }}</td>
+                            <td data-label="Status">
+                                {% if item.status == "Validé" %}
+                                    <span class="badge valider">Validé</span>
+                                {% else %}
+                                    <span class="badge refuser">Refusé</span>
+                                {% endif %}
+                            </td>
+                            <td data-label="Actions" class="champ_btn">
+                                <a href="{% url 'valideAvis' item.id %}">
+                                    <button class="btn-valider">Valider</button>
+                                </a>
+                                <a href="{% url 'refuseAvis' item.id %}" onclick="return confirm('Voulez-vous vraiment refuser cet avis ?')">
+                                    <button class="btn-refuser">Refuser</button>
+                                </a>
+                                <a href="{% url 'supprimerAvis' item.id %}" onclick="return confirm('Voulez-vous vraiment supprimer cet avis ?')">
+                                    <button class="btn-supprimer">Supprimer</button>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% comment %} <div class="pagination">
+                {% if avis.has_previous %}
+                    <a href="?page={{ avis.previous_page_number }}">⬅</a>
+                {% endif %}
+                <span>Page {{ avis.number }} / {{ avis.paginator.num_pages }}</span>
+                {% if avis.has_next %}
+                    <a href="?page={{ avis.next_page_number }}">➡</a>
+                {% endif %}
+            </div> 
+            {% endcomment %}
         </div>
         {% else %}
-            <div class="title_page">
+        <div class="title_page">
             <p>Aucun avis pour le moment...</p>
-            </div>
-            {% endif %}
-            {% comment %} <!-- PAGINATION -->
-        <div class="pagination">
-            {% if messages_contact.has_previous %}
-                <a href="?page={{ messages_contact.previous_page_number }}">⬅</a>
-            {% endif %}
-
-            <span>Page {{ messages_contact.number }} / {{ messages_contact.paginator.num_pages }}</span>
-
-            {% if messages_contact.has_next %}
-                <a href="?page={{ messages_contact.next_page_number }}">➡</a>
-            {% endif %}
-        </div> {% endcomment %}
-
-    </div>
-{% endblock  %}
+        </div>
+        {% endif %}
+    </div> {% endblock %}

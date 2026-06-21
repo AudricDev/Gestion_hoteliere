@@ -70,7 +70,13 @@ def update_profil(request):
         messages.success(request, "Profil mis à jour avec succès")
         return redirect(request.META.get('HTTP_REFERER'))
     
-    if(user.user_profil.role == "Admin"):
+    # if not (user.user_profil.role == "Admin"):
+    #     return redirect('index')
+    # elif user.user_profil.role == "Responsable":
+    #     return redirect('responsable')
+    # else:
+    #     return redirect('dashboard')
+    if (user.user_profil.role == "Admin"):
         return redirect('dashboard')
     elif user.user_profil.role == "Responsable":
         return redirect('responsable')
@@ -81,7 +87,7 @@ def update_profil(request):
 def nosChambre(request):
     maintenant = timezone.now()
     # Remettre toutes les chambres disponibles
-    Chambre.objects.update(status="Disponible")
+    chambres = Chambre.objects.update(status="Disponible")
     
     # Réservations actuellement en cours
     reservations_actives = Reservation.objects.filter(
@@ -97,7 +103,15 @@ def nosChambre(request):
     return render(request, 'nosChambre.html', {
         'chambres': chambres,
     })
-    
+    # count = 0
+    # for count in range(len(reservations_actives)):
+    #     reservation = reservations_actives[count]
+    #     reservation.chambre.status = "Non disponible"
+    #     reservation.chambre.save()
+    # return render(request, 'nosChambre.html', {
+    #     'chambres': chambres,
+    # })
+        
 # affichage des avis client
 def avisClient(request):
     return render(request,'avisClient.html')
@@ -380,6 +394,26 @@ def chercherUtilisateur(request):
         'contact_count':contact_count
     }
     return render(request,'gestionUtilisateur.html',context)  
+
+#chercher equipement
+def chercherEquipement(request):
+    data_input = request.GET.get("search")
+    chambre_dispo = Chambre.objects.filter(status='Disponible').count()
+    chambre_occupe = Chambre.objects.filter(status='Non disponible').count()
+    reservation = Reservation.objects.all()
+    contact_count = ContactMessage.objects.filter(lu=False).count()        
+    resultat = Equipement.objects.filter(
+        Q(title__icontains = data_input) | 
+        Q(description__icontains = data_input)
+        )
+    context = {
+        'equipements' : resultat,
+        'chambre_dispo':chambre_dispo, 
+        'chambre_occupe':chambre_occupe, 
+        'reservations':reservation,
+        'contact_count':contact_count
+    }
+    return render(request,'gestionEquipement.html',context)  
 
 #tabeau de board
 def dashboard(request):
