@@ -433,6 +433,73 @@
     const preview = document.getElementById("preview");
     const ajoutImg = document.getElementById("ajoutImg");
 
+    //CHAMBRE DOUBLE
+    var mychart = document.querySelector(".statdouble");
+    var initchart = echarts.init(mychart);
+    var option = {
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet','Aout','Septembre','Octobre','Novembre','Decembre']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+        data: [1, 0, 3, 0, 5, 2, 3,0,0,10,0,10],
+        type: 'line',
+        areaStyle: {}
+        }
+    ]
+    };
+    initchart.setOption(option);
+    
+    //CHAMBRE SIMPLE
+    var mychart1 = document.querySelector(".statsimple");
+    var initchart1 = echarts.init(mychart1);
+    var option1 = {
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet','Aout','Septembre','Octobre','Novembre','Decembre']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+        data: [1, 0, 3, 0, 5, 2, 3,0,0,10,0,10],
+        type: 'line',
+        areaStyle: {}
+        }
+    ]
+    };
+    initchart1.setOption(option1);
+
+//CHAMBRE familiale
+    var mychart0 = document.querySelector(".statfamiliale");
+    var initchart0 = echarts.init(mychart0);
+    var option0 = {
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet','Aout','Septembre','Octobre','Novembre','Decembre']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+        data: [1, 0, 3, 0, 5, 2, 3,0,0,10,0,10],
+        type: 'line',
+        areaStyle: {}
+        }
+    ]
+    };
+    initchart0.setOption(option0);
+
+    console.log(option)
     fileInput.addEventListener("change", function(){
 
         const fichier = this.files[0];
@@ -451,6 +518,8 @@
         }
 
     });
+
+</script>
 </script>
 </body>
 </html>
